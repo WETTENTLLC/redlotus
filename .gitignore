@@ -59,17 +59,18 @@ stats.html
 *.new
 *_history.txt
 
-# Documentation that should stay local
-ADMIN_*.md
-COMPLETE_*.md
-COMPREHENSIVE_*.md
-DEPLOYMENT*.md
-FIREBASE_*.md
-PRODUCTION_*.md
-PROJECT_*.md
-RED_LOTUS_*.md
-TYPESCRIPT_*.md
-VERCEL_*.md
+# Documentation that should stay local (but keep essential project docs)
+# Block temporary/draft docs
+*_TEMP.md
+*_DRAFT.md
+*_NOTES.md
+App_history.txt
+
+# Keep these essential project docs:
+# - PAYPAL_SETUP_GUIDE.md
+# - ADMIN_TESTING_CHECKLIST.md  
+# - PROJECT_COMPLETION_SUMMARY.md
+# - PRODUCTION_DEPLOYMENT_CHECKLIST.md
 
 # OS generated files
 Thumbs.db
