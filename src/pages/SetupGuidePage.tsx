@@ -149,12 +149,12 @@ const SetupGuidePage: React.FC = () => {
           
           <div className="bg-white rounded-lg shadow-md p-8">
             <div className="markdown-content prose prose-red max-w-none">
-              <Markdown>{markdownContent}</Markdown>
-            </div>
-          </div>
+              <Markdown>{markdownContent || ''}</Markdown>
+            </div>          </div>
         </div>
       </div>
-    </div>  );
+    </div>
+  );
 };
 
 export default SetupGuidePage;

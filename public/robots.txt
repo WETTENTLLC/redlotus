@@ -1,0 +1,70 @@
+User-agent: *
+Allow: /
+
+# Priority pages for Red Lotus Music
+Allow: /albums
+Allow: /live
+Allow: /tribe
+Allow: /about
+
+# Admin pages - restrict crawling
+Disallow: /admin
+Disallow: /login
+Disallow: /setup
+Disallow: /diagnostics
+
+# API endpoints
+Disallow: /api/
+
+# Static assets
+Allow: /assets/
+Allow: /images/
+Allow: /og-image.png
+Allow: /*.css
+Allow: /*.js
+
+# Sitemap location
+Sitemap: https://redlotusofficial.com/sitemap.xml
+
+# Crawl delay to be respectful
+Crawl-delay: 1
+
+# Specific instructions for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Social media crawlers
+User-agent: facebookexternalhit/
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+# Music platform crawlers
+User-agent: Spotify
+Allow: /
+
+User-agent: AppleBot
+Allow: /
+
+# Block unwanted bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

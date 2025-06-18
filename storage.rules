@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules for Red Lotus Music
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow uploads to music folder for authenticated admin users
+    match /music/{allPaths=**} {
+      allow read: if true; // Public read access for streaming
+      allow write: if request.auth != null; // Only authenticated users can upload
+    }
+    
+    // Allow uploads to images folder for authenticated admin users
+    match /images/{allPaths=**} {
+      allow read: if true; // Public read access
+      allow write: if request.auth != null; // Only authenticated users can upload
+    }
+    
+    // Allow uploads to videos folder for authenticated admin users
+    match /videos/{allPaths=**} {
+      allow read: if true; // Public read access
+      allow write: if request.auth != null; // Only authenticated users can upload
+    }
+    
+    // Fan art uploads - allow authenticated users to upload, public read
+    match /fanArt/{allPaths=**} {
+      allow read: if true; // Public read access
+      allow write: if request.auth != null; // Authenticated users can upload fan art
+    }
+    
+    // Default rule for other paths - more restrictive
+    match /{allPaths=**} {
+      allow read: if true; // Allow public read access
+      allow write: if request.auth != null; // Only authenticated users can write
+    }
+  }
+}

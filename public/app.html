@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Lotus Music</title>
+  <!-- Import all meta tags from the main index.html -->
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="theme-color" content="#45080A" />
+  <meta property="og:title" content="Red Lotus | Official Site" />
+  <meta property="og:description" content="Red Lotus - Official music collective. Explore albums, join the tribe, and experience exclusive content." />
+  <meta property="og:image" content="/og-image.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="Red Lotus - Official music collective. Explore albums, join the tribe, and experience exclusive content." />
+  <!-- Responsive font scaling styles from the main index.html -->
+  <style>
+    html {
+      font-size: 16px;
+    }
+    @media screen and (max-width: 640px) {
+      html {
+        font-size: 14px;
+      }
+    }
+    @media screen and (min-width: 1920px) {
+      html {
+        font-size: 18px;
+      }
+    }
+    @media screen and (min-width: 2560px) {
+      html {
+        font-size: 20px;
+      }
+    }
+    /* Safe areas for notched devices */
+    @supports(padding: max(0px)) {
+      body {
+        padding-left: min(0vmin, env(safe-area-inset-left));
+        padding-right: min(0vmin, env(safe-area-inset-right));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <!-- Use the JavaScript file instead of TypeScript -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

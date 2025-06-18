@@ -1,0 +1,76 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment variables - IMPORTANT: Keep secrets safe!
+.env.local
+.env.production
+.env.development
+.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.vercel
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Backup directories
+backup-*/
+temp_backup/
+environment-snapshot-*/
+direct-file-update/
+single-file-deploy/
+
+# PowerShell scripts (keep locally, don't push)
+*.ps1
+
+# Test files
+test-*.js
+test-*.html
+stats.html
+
+# Old/backup files
+*.old
+*.temp
+*.backup
+*.clean
+*.new
+*_history.txt
+
+# Documentation that should stay local
+ADMIN_*.md
+COMPLETE_*.md
+COMPREHENSIVE_*.md
+DEPLOYMENT*.md
+FIREBASE_*.md
+PRODUCTION_*.md
+PROJECT_*.md
+RED_LOTUS_*.md
+TYPESCRIPT_*.md
+VERCEL_*.md
+
+# OS generated files
+Thumbs.db
+Desktop.ini
