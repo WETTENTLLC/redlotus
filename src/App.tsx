@@ -16,6 +16,7 @@ import { SecurityService } from './security/SecurityService';
 import ProductionReadinessTest from './testing/ProductionReadinessTest';
 import TribeTransition from './components/TribeTransition';
 import TribeExperience from './components/TribeExperience';
+import SimpleTribeActivation from './components/SimpleTribeActivation';
 import CommunityForum from './features/community/CommunityForum';
 
 // Import images
@@ -68,11 +69,16 @@ function App() {
       }
     } catch (error) {
       console.error('Failed to initialize production services:', error);
+      // Continue without monitoring services if they fail
     }
     
     // Cleanup on unmount
     return () => {
-      PerformanceService.cleanup();
+      try {
+        PerformanceService.cleanup();
+      } catch (error) {
+        console.warn('Cleanup failed:', error);
+      }
     };
   }, []);
   
@@ -123,27 +129,38 @@ function App() {
 
   // Handle theme change with enhanced tribe activation
   const handleThemeChange = (theme: 'red' | 'yellow' | 'blue') => {
-    setActiveTheme(theme);
-    setUserTribe(theme);
-    setThemeWelcomeMessage(themeColors[theme].welcome);
-    
-    // Trigger tribe transition animation
-    setTribeTransitionType(theme);
-    setShowTribeTransition(true);
-    
-    // Show welcome message after animation
-    setTimeout(() => {
-      setShowThemeWelcome(true);
-      setShowTribeTransition(false);
-    }, 1500);
-    
-    // Track theme change
-    MonitoringService.trackUserAction('tribe_activation', 'ui', theme);
-    
-    // Hide welcome message after 4 seconds
-    setTimeout(() => {
-      setShowThemeWelcome(false);
-    }, 5500);
+    try {
+      setActiveTheme(theme);
+      setUserTribe(theme);
+      setThemeWelcomeMessage(themeColors[theme].welcome);
+      
+      // Trigger tribe transition animation
+      setTribeTransitionType(theme);
+      setShowTribeTransition(true);
+      
+      // Show welcome message after animation
+      setTimeout(() => {
+        setShowThemeWelcome(true);
+        setShowTribeTransition(false);
+      }, 1500);
+      
+      // Track theme change (with error handling)
+      try {
+        MonitoringService.trackUserAction('tribe_activation', 'ui', theme);
+      } catch (error) {
+        console.warn('Analytics tracking failed:', error);
+      }
+      
+      // Hide welcome message after 4 seconds
+      setTimeout(() => {
+        setShowThemeWelcome(false);
+      }, 5500);
+    } catch (error) {
+      console.error('Error activating tribe:', error);
+      // Still set the tribe even if other features fail
+      setActiveTheme(theme);
+      setUserTribe(theme);
+    }
   };
 
   // Handle explore button click
@@ -513,28 +530,10 @@ function App() {
               {userTribe ? (
                 <TribeExperience tribe={userTribe} isActive={true} />
               ) : (
-                <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full mx-auto">
-                  <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Choose Your Tribe</h2>
-                  <p className="text-lg md:text-xl mb-6 md:mb-8">Select your lotus tribe above to unlock personalized experiences, exclusive content, and connect with your community</p>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                    {Object.keys(themeColors).map(color => (
-                      <div 
-                        key={color} 
-                        className="p-6 bg-black bg-opacity-50 rounded-lg hover:transform hover:scale-105 transition cursor-pointer touch-manipulation border-2 border-transparent hover:border-white/30"
-                        onClick={() => handleThemeChange(color as 'red' | 'yellow' | 'blue')}
-                      >
-                        <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${themeColors[color as keyof typeof themeColors].bg} flex items-center justify-center`}>
-                          <img src={lotusForEachAlbum} alt={`${color} lotus`} className="w-12 h-10 filter brightness-0 invert" />
-                        </div>
-                        <h3 className="text-lg md:text-xl font-bold mb-2 text-white">{themeColors[color as keyof typeof themeColors].name} Lotus</h3>
-                        <p className="text-sm md:text-base text-gray-300">{themeColors[color as keyof typeof themeColors].description}</p>
-                        <button className={`mt-4 px-4 py-2 ${themeColors[color as keyof typeof themeColors].bg} text-white rounded-full hover:opacity-80 transition`}>
-                          Join Tribe
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <SimpleTribeActivation 
+                  onTribeSelect={handleThemeChange}
+                  currentTribe={userTribe}
+                />
               )}
             </div>
           )}

@@ -32,12 +32,16 @@ export class MonitoringService {
   static initialize(): void {
     if (this.isInitialized) return;
 
-    this.setupErrorHandlers();
-    this.setupPerformanceMonitoring();
-    this.initializeAnalytics();
-    this.isInitialized = true;
-
-    console.log('🔍 Monitoring service initialized');
+    try {
+      this.setupErrorHandlers();
+      this.setupPerformanceMonitoring();
+      this.initializeAnalytics();
+      this.isInitialized = true;
+      console.log('🔍 Monitoring service initialized');
+    } catch (error) {
+      console.warn('Monitoring service initialization failed:', error);
+      this.isInitialized = true; // Mark as initialized to prevent retry loops
+    }
   }
 
   private static setupErrorHandlers(): void {
@@ -194,26 +198,30 @@ export class MonitoringService {
   }
 
   static trackEvent(event: Omit<AnalyticsEvent, 'timestamp' | 'sessionId'>): void {
-    const analyticsEvent: AnalyticsEvent = {
-      timestamp: Date.now(),
-      sessionId: this.sessionId,
-      ...event
-    };
+    try {
+      const analyticsEvent: AnalyticsEvent = {
+        timestamp: Date.now(),
+        sessionId: this.sessionId,
+        ...event
+      };
 
-    this.analyticsEvents.push(analyticsEvent);
+      this.analyticsEvents.push(analyticsEvent);
 
-    // Send to Google Analytics if available
-    if ((window as any).gtag) {
-      (window as any).gtag('event', event.action, {
-        event_category: event.category,
-        event_label: event.label,
-        value: event.value
-      });
-    }
+      // Send to Google Analytics if available
+      if ((window as any).gtag) {
+        (window as any).gtag('event', event.action, {
+          event_category: event.category,
+          event_label: event.label,
+          value: event.value
+        });
+      }
 
-    // Keep only last 500 events in memory
-    if (this.analyticsEvents.length > 500) {
-      this.analyticsEvents = this.analyticsEvents.slice(-500);
+      // Keep only last 500 events in memory
+      if (this.analyticsEvents.length > 500) {
+        this.analyticsEvents = this.analyticsEvents.slice(-500);
+      }
+    } catch (error) {
+      console.warn('Failed to track event:', error);
     }
   }
 
@@ -279,12 +287,16 @@ export class MonitoringService {
   }
 
   static trackUserAction(action: string, category: string, label?: string): void {
-    this.trackEvent({
-      event: 'user_action',
-      category,
-      action,
-      label
-    });
+    try {
+      this.trackEvent({
+        event: 'user_action',
+        category,
+        action,
+        label
+      });
+    } catch (error) {
+      console.warn('Failed to track user action:', error);
+    }
   }
 
   private static async sendErrorToService(error: ErrorLog): Promise<void> {
