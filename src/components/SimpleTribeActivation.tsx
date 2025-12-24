@@ -121,10 +121,13 @@ const SimpleTribeActivation: React.FC<SimpleTribeActivationProps> = ({ onTribeSe
           <form onSubmit={handleJoinTribe} className="max-w-md mx-auto">
             <div className="mb-4">
               <input
+                id="tribe-email"
+                name="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
+                autoComplete="email"
                 required
                 className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none"
               />

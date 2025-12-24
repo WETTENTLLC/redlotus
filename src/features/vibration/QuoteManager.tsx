@@ -19,8 +19,10 @@ interface QuoteTextFieldProps {
 
 const QuoteTextField: React.FC<QuoteTextFieldProps> = ({ text, setText }) => (
   <div>
-    <label className="block text-sm font-medium mb-1">Quote Text:</label>
+    <label htmlFor="quote-text" className="block text-sm font-medium mb-1">Quote Text:</label>
     <textarea
+      id="quote-text"
+      name="text"
       value={text}
       onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setText(e.target.value)}
       required
@@ -32,11 +34,14 @@ const QuoteTextField: React.FC<QuoteTextFieldProps> = ({ text, setText }) => (
 
 const AuthorInput: React.FC<{ author: string; setAuthor: React.Dispatch<React.SetStateAction<string>> }> = ({ author, setAuthor }) => (
   <div>
-    <label className="block text-sm font-medium mb-1">Author:</label>
+    <label htmlFor="quote-author" className="block text-sm font-medium mb-1">Author:</label>
     <input
+      id="quote-author"
+      name="author"
       type="text"
       value={author}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthor(e.target.value)}
+      autoComplete="name"
       required
       className="w-full px-3 py-2 border rounded-md"
     />
@@ -206,8 +211,10 @@ const QuoteManager: React.FC = () => {
               <QuoteTextField text={text} setText={setText} />
               <AuthorInput author={author} setAuthor={setAuthor} />
               <div>
-                <label className="block text-sm font-medium mb-1">Category:</label>
+                <label htmlFor="quote-category" className="block text-sm font-medium mb-1">Category:</label>
                 <select
+                  id="quote-category"
+                  name="category"
                   value={category}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setCategory(e.target.value)}
                   required
@@ -222,8 +229,10 @@ const QuoteManager: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Target Tribe:</label>
+                <label htmlFor="quote-tribe" className="block text-sm font-medium mb-1">Target Tribe:</label>
                 <select
+                  id="quote-tribe"
+                  name="tribe"
                   value={tribe}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTribe(e.target.value as 'all' | 'red' | 'yellow' | 'blue')}
                   required
@@ -239,6 +248,7 @@ const QuoteManager: React.FC = () => {
                 <input
                   type="checkbox"
                   id="featured"
+                  name="featured"
                   checked={featured}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFeatured(e.target.checked)}
                   className="mr-2"
