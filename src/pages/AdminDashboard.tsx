@@ -4,6 +4,7 @@ import MessageManager from '../features/messaging/MessageManager';
 import QuoteManager from '../features/vibration/QuoteManager';
 import StoreManager from '../components/admin/StoreManager';
 import ContentManager from '../components/admin/ContentManager';
+import EnhancedContentManager from '../components/admin/EnhancedContentManager';
 import BookingManager from '../components/admin/BookingManager';
 import { auth } from '../firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -12,7 +13,7 @@ import { db } from '../firebase/config';
 import lotusLogo from '../assets/lotus-each-album.png';
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'media' | 'store' | 'content' | 'messages' | 'quotes' | 'fanart' | 'bookings'>('store');
+  const [activeTab, setActiveTab] = useState<'enhanced-content' | 'media' | 'store' | 'content' | 'messages' | 'quotes' | 'fanart' | 'bookings' | 'analytics'>('enhanced-content');
   const [user, loading, error] = useAuthState(auth);
   const [uploadedSongs, setUploadedSongs] = useState<any[]>([]);
   const [pendingFanArt, setPendingFanArt] = useState<any[]>([]);
@@ -125,55 +126,117 @@ const AdminDashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="flex border-b overflow-x-auto scrollbar-hide">
             <button 
+              className={`py-4 px-6 text-center flex-grow ${activeTab === 'enhanced-content' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('enhanced-content')}
+            >
+              🎯 Content Hub
+            </button>
+            <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'store' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('store')}
             >
-              Store Manager
+              🛍️ Store Manager
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'content' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('content')}
             >
-              Content Manager
+              📝 Legacy Content
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'media' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('media')}
             >
-              Media Upload
+              📁 Media Upload
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'bookings' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('bookings')}
             >
-              Bookings
+              📅 Bookings
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'fanart' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('fanart')}
             >
-              Fan Art ({pendingFanArt.length})
+              🎨 Fan Art ({pendingFanArt.length})
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'messages' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('messages')}
             >
-              Messages
+              💬 Messages
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'quotes' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('quotes')}
             >
-              Vibe Quotes
+              ✨ Vibe Quotes
+            </button>
+            <button 
+              className={`py-4 px-6 text-center flex-grow ${activeTab === 'analytics' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              📊 Analytics
             </button>
           </div>
           
           <div className="p-4">
+            {activeTab === 'enhanced-content' && <EnhancedContentManager />}
+            
             {activeTab === 'store' && <StoreManager />}
             
             {activeTab === 'content' && <ContentManager />}
             
             {activeTab === 'bookings' && <BookingManager />}
+            
+            {activeTab === 'analytics' && (
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-red-lotus">📊 Site Analytics & Insights</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-gradient-to-r from-red-lotus to-red-600 p-6 rounded-lg text-white">
+                    <h4 className="text-lg font-bold mb-2">❄️ Red Lotus Tribe</h4>
+                    <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'red').length}</div>
+                    <div className="text-red-100">Members</div>
+                  </div>
+                  <div className="bg-gradient-to-r from-yellow-lotus to-yellow-600 p-6 rounded-lg text-white">
+                    <h4 className="text-lg font-bold mb-2">☀️ Yellow Lotus Tribe</h4>
+                    <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'yellow').length}</div>
+                    <div className="text-yellow-100">Members</div>
+                  </div>
+                  <div className="bg-gradient-to-r from-blue-lotus to-blue-600 p-6 rounded-lg text-white">
+                    <h4 className="text-lg font-bold mb-2">🌸 Blue Lotus Tribe</h4>
+                    <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'blue').length}</div>
+                    <div className="text-blue-100">Members</div>
+                  </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-sm border">
+                  <h4 className="text-xl font-bold mb-4">Recent Tribe Members</h4>
+                  <div className="space-y-2">
+                    {JSON.parse(localStorage.getItem('tribemembers') || '[]').slice(-10).reverse().map((member: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                        <div>
+                          <span className="font-medium">{member.name}</span>
+                          <span className="text-gray-500 ml-2">({member.email})</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            member.tribe === 'red' ? 'bg-red-100 text-red-800' :
+                            member.tribe === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-blue-100 text-blue-800'
+                          }`}>
+                            {member.tribe === 'red' ? '❄️ Red' : member.tribe === 'yellow' ? '☀️ Yellow' : '🌸 Blue'} Lotus
+                          </span>
+                          <span className="text-sm text-gray-500">
+                            {new Date(member.joinedAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
             {activeTab === 'media' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
