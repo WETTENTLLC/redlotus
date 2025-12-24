@@ -529,36 +529,41 @@ function App() {
 
           {activeSection === 'tribe' && (
             <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Join the Lotus Tribe</h2>
-              <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and join with your email</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">🌸 Join the Lotus Tribe 🌸</h2>
+              <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and unlock exclusive experiences</p>
               
               {!userTribe ? (
                 <div className="space-y-8">
-                  {/* Tribe Selection */}
+                  {/* Tribe Selection Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {Object.entries(themeColors).map(([key, tribe]) => (
                       <div
                         key={key}
                         className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${
                           activeTheme === key 
-                            ? `${tribe.bg} border-4 border-white shadow-lg` 
+                            ? `${tribe.bg} border-4 border-white shadow-lg transform scale-105` 
                             : 'bg-gray-800 hover:bg-gray-700 border-2 border-gray-600'
                         }`}
                         onClick={() => setActiveTheme(key as 'red' | 'yellow' | 'blue')}
                       >
                         <div className="text-center">
-                          <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center`}>
-                            <span className="text-2xl">🪷</span>
+                          <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center shadow-lg`}>
+                            <span className="text-3xl">🪷</span>
                           </div>
-                          <h3 className={`text-xl font-bold mb-2 ${activeTheme === key ? 'text-white' : 'text-gray-200'}`}>
+                          <h3 className={`text-2xl font-bold mb-3 ${activeTheme === key ? 'text-white' : 'text-gray-200'}`}>
                             {tribe.name} Lotus
                           </h3>
-                          <p className={`text-sm mb-2 ${activeTheme === key ? 'text-gray-100' : 'text-gray-400'}`}>
+                          <p className={`text-base mb-3 font-medium ${activeTheme === key ? 'text-gray-100' : 'text-gray-400'}`}>
                             {tribe.description}
                           </p>
+                          <div className={`text-sm ${activeTheme === key ? 'text-gray-200' : 'text-gray-500'}`}>
+                            {key === 'red' && '❄️ Winter Energy • Focus • Determination'}
+                            {key === 'yellow' && '☀️ Summer Energy • Joy • Positivity'}
+                            {key === 'blue' && '🌸 Spring Energy • Peace • Renewal'}
+                          </div>
                           {activeTheme === key && (
-                            <div className="mt-4 text-white font-bold">
-                              ✓ Selected
+                            <div className="mt-4 text-white font-bold text-lg animate-pulse">
+                              ✓ SELECTED
                             </div>
                           )}
                         </div>
@@ -566,8 +571,11 @@ function App() {
                     ))}
                   </div>
                   
-                  {/* Email Form */}
-                  <div className="max-w-md mx-auto">
+                  {/* Email Subscription Form */}
+                  <div className="max-w-md mx-auto bg-gray-900 p-6 rounded-lg border border-gray-700">
+                    <h3 className="text-xl font-bold mb-4 text-center">
+                      Join the {themeColors[activeTheme].name} Lotus Tribe
+                    </h3>
                     <form onSubmit={handleEmailSubscription} className="space-y-4">
                       <div>
                         <input
@@ -576,32 +584,32 @@ function App() {
                           type="email"
                           value={tribeEmail}
                           onChange={(e) => setTribeEmail(e.target.value)}
-                          placeholder="Enter your email to join"
+                          placeholder="Enter your email to join the tribe"
                           autoComplete="email"
                           required
-                          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none"
+                          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none text-center"
                         />
                       </div>
                       <button
                         type="submit"
                         disabled={isSubmittingEmail}
-                        className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all ${
+                        className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all text-lg ${
                           isSubmittingEmail 
                             ? 'bg-gray-600 cursor-not-allowed' 
-                            : `${themeColors[activeTheme].bg} hover:opacity-80`
+                            : `${themeColors[activeTheme].bg} hover:opacity-80 transform hover:scale-105`
                         }`}
                       >
-                        {isSubmittingEmail ? 'Joining...' : `Join ${themeColors[activeTheme].name} Lotus Tribe`}
+                        {isSubmittingEmail ? '🔄 Joining...' : `🚀 Join ${themeColors[activeTheme].name} Lotus Tribe`}
                       </button>
                       
                       {emailSubmissionStatus === 'success' && (
-                        <div className="text-green-400 text-center">
-                          ✅ Successfully joined the {themeColors[activeTheme].name} Lotus tribe!
+                        <div className="text-green-400 text-center font-bold">
+                          ✅ Welcome to the {themeColors[activeTheme].name} Lotus tribe!
                         </div>
                       )}
                       
                       {emailSubmissionStatus === 'error' && (
-                        <div className="text-red-400 text-center">
+                        <div className="text-red-400 text-center font-bold">
                           ❌ {emailError || 'Error joining the tribe. Please try again.'}
                         </div>
                       )}
