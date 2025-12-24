@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { storage } from '../../firebase/config'; // Assumes Firebase setup
+import { storage } from '../../firebase/config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { SecurityService } from '../../security/SecurityService';
 
 interface MediaUploaderProps {
   mediaType: 'image' | 'audio';
   folder: string;
   onComplete: (url: string, metadata?: any) => void;
   allowedTypes?: string[];
+  maxSizeMB?: number;
 }
 
 const MediaUploader: React.FC<MediaUploaderProps> = ({ 
@@ -15,7 +17,8 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
   onComplete,
   allowedTypes = mediaType === 'image' 
     ? ['image/jpeg', 'image/png', 'image/webp'] 
-    : ['audio/mpeg', 'audio/wav', 'audio/ogg']
+    : ['audio/mpeg', 'audio/wav', 'audio/ogg'],
+  maxSizeMB = mediaType === 'image' ? 10 : 50
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -30,9 +33,21 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
       
-      // Validate file type
-      if (!allowedTypes.includes(selectedFile.type)) {
+      // Security validations
+      if (!SecurityService.validateFileType(selectedFile, allowedTypes)) {
         setError(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`);
+        return;
+      }
+      
+      if (!SecurityService.validateFileSize(selectedFile, maxSizeMB)) {
+        setError(`File too large. Maximum size: ${maxSizeMB}MB`);
+        return;
+      }
+      
+      // Additional security check for file name
+      const sanitizedFileName = SecurityService.sanitizeInput(selectedFile.name);
+      if (sanitizedFileName !== selectedFile.name) {
+        setError('Invalid characters in filename');
         return;
       }
       
@@ -62,15 +77,31 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
 
   const handleMetadataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setMetadata((prev: Record<string, string | number>) => ({ ...prev, [name]: value }));
+    const sanitizedValue = SecurityService.sanitizeInput(value);
+    setMetadata((prev: Record<string, string | number>) => ({ ...prev, [name]: sanitizedValue }));
   };
 
   const uploadFile = async () => {
     if (!file) return;
     
-    const storageRef = ref(storage, `${folder}/${Date.now()}-${file.name}`);
+    // Final security check before upload
+    if (!SecurityService.validateFileType(file, allowedTypes) || 
+        !SecurityService.validateFileSize(file, maxSizeMB)) {
+      setError('File validation failed');
+      return;
+    }
+    
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substr(2, 9);
+    const sanitizedFileName = SecurityService.sanitizeInput(file.name);
+    const storageRef = ref(storage, `${folder}/${timestamp}-${randomId}-${sanitizedFileName}`);
+    
     const uploadTask = uploadBytesResumable(storageRef, file, {
-      customMetadata: metadata
+      customMetadata: {
+        ...metadata,
+        uploadedAt: timestamp.toString(),
+        originalName: sanitizedFileName
+      }
     });
     
     uploadTask.on('state_changed', 
@@ -79,15 +110,23 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({
         setProgress(progress);
       },
       (error) => {
+        console.error('Upload error:', error);
         setError('Error uploading file: ' + error.message);
+        setProgress(0);
       },
       async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        onComplete(downloadURL, metadata);
-        setProgress(0);
-        setFile(null);
-        setPreview(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
+        try {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          onComplete(downloadURL, metadata);
+          setProgress(0);
+          setFile(null);
+          setPreview(null);
+          setMetadata({});
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        } catch (error) {
+          console.error('Error getting download URL:', error);
+          setError('Failed to complete upload');
+        }
       }
     );
   };

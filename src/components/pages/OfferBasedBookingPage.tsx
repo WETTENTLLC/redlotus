@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PayPalPayment from '../payments/PayPalPayment';
+import lotusLogo from '../../assets/lotus-each-album.png';
 
 interface BookingFormData {
   name: string;
@@ -121,50 +122,52 @@ const OfferBasedBookingPage: React.FC = () => {
     setShowPayment(false);
   };
 
-  return (
-    <div className="min-h-screen bg-black text-white">
+  return (    <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-r from-purple-900 via-red-800 to-yellow-600 flex items-center justify-center">
-        <div className="text-center z-10">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white drop-shadow-lg">
-            🎵 BOOK RED LOTUS
-          </h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto px-4">
+      <div className="relative h-64 md:h-96 bg-gradient-to-r from-purple-900 via-red-800 to-yellow-600 flex items-center justify-center">
+        <div className="text-center z-10 px-4">          <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
+            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-32 md:h-24" />
+            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg text-shadow">
+              BOOK RED LOTUS
+            </h1>
+            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-32 md:h-24" />
+          </div>
+          <p className="text-sm md:text-xl text-white/90 max-w-3xl mx-auto px-4 leading-relaxed">
             Make an offer for performances, collaborations, shoots, and special engagements
           </p>
         </div>
         <div className="absolute inset-0 bg-black/30"></div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6 md:py-12">
         {/* Services Overview */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="bg-gradient-to-br from-red-900/30 to-red-700/30 rounded-lg p-6 border border-red-500/30">
-            <div className="text-3xl mb-3">🎤</div>
-            <h3 className="text-lg font-semibold text-red-400 mb-2">Live Performances</h3>
-            <p className="text-white/80 text-sm">Concerts, festivals, private events</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
+          <div className="bg-gradient-to-br from-red-900/30 to-red-700/30 rounded-lg p-4 md:p-6 border border-red-500/30">
+            <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎤</div>
+            <h3 className="text-base md:text-lg font-semibold text-red-400 mb-2">Live Performances</h3>
+            <p className="text-white/80 text-xs md:text-sm">Concerts, festivals, private events</p>
           </div>
-          <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-700/30 rounded-lg p-6 border border-yellow-500/30">
-            <div className="text-3xl mb-3">🎵</div>
-            <h3 className="text-lg font-semibold text-yellow-400 mb-2">Collaborations</h3>
-            <p className="text-white/80 text-sm">Features, songwriting, production</p>
+          <div className="bg-gradient-to-br from-yellow-900/30 to-yellow-700/30 rounded-lg p-4 md:p-6 border border-yellow-500/30">
+            <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎵</div>
+            <h3 className="text-base md:text-lg font-semibold text-yellow-400 mb-2">Collaborations</h3>
+            <p className="text-white/80 text-xs md:text-sm">Features, songwriting, production</p>
           </div>
-          <div className="bg-gradient-to-br from-purple-900/30 to-purple-700/30 rounded-lg p-6 border border-purple-500/30">
-            <div className="text-3xl mb-3">📸</div>
-            <h3 className="text-lg font-semibold text-purple-400 mb-2">Photo/Video</h3>
-            <p className="text-white/80 text-sm">Professional shoots, music videos</p>
+          <div className="bg-gradient-to-br from-purple-900/30 to-purple-700/30 rounded-lg p-4 md:p-6 border border-purple-500/30">
+            <div className="text-2xl md:text-3xl mb-2 md:mb-3">📸</div>
+            <h3 className="text-base md:text-lg font-semibold text-purple-400 mb-2">Photo/Video</h3>
+            <p className="text-white/80 text-xs md:text-sm">Professional shoots, music videos</p>
           </div>
-          <div className="bg-gradient-to-br from-blue-900/30 to-blue-700/30 rounded-lg p-6 border border-blue-500/30">
-            <div className="text-3xl mb-3">✨</div>
-            <h3 className="text-lg font-semibold text-blue-400 mb-2">Special Events</h3>
-            <p className="text-white/80 text-sm">Corporate, private, custom experiences</p>
+          <div className="bg-gradient-to-br from-blue-900/30 to-blue-700/30 rounded-lg p-4 md:p-6 border border-blue-500/30">
+            <div className="text-2xl md:text-3xl mb-2 md:mb-3">✨</div>
+            <h3 className="text-base md:text-lg font-semibold text-blue-400 mb-2">Special Events</h3>
+            <p className="text-white/80 text-xs md:text-sm">Corporate, private, custom experiences</p>
           </div>
         </div>
 
         {/* Booking Form */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-gray-900/50 rounded-lg p-8 border border-red-500/20">
-            <h2 className="text-3xl font-bold text-center mb-8 text-red-400">
+          <div className="bg-gray-900/50 rounded-lg p-4 md:p-8 border border-red-500/20">
+            <h2 className="text-xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-red-400">
               Submit Your Booking Offer
             </h2>
 
@@ -182,11 +185,9 @@ const OfferBasedBookingPage: React.FC = () => {
                   ❌ There was an error submitting your request. Please try again or contact us directly.
                 </p>
               </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-6">
+            )}            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               {/* Personal Information */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-white/90 text-sm font-semibold mb-2">
                     Full Name *
@@ -197,7 +198,7 @@ const OfferBasedBookingPage: React.FC = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                     placeholder="Your full name"
                   />
                 </div>
@@ -211,13 +212,13 @@ const OfferBasedBookingPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                     placeholder="your@email.com"
                   />
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-white/90 text-sm font-semibold mb-2">
                     Phone Number *
@@ -228,7 +229,7 @@ const OfferBasedBookingPage: React.FC = () => {
                     value={formData.phone}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                     placeholder="(555) 123-4567"
                   />
                 </div>
@@ -241,16 +242,14 @@ const OfferBasedBookingPage: React.FC = () => {
                     name="company"
                     value={formData.company}
                     onChange={handleInputChange}
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                     placeholder="Company or venue name"
                   />
                 </div>
-              </div>
-
-              {/* Social Media Handles */}
+              </div>              {/* Social Media Handles */}
               <div>
-                <h3 className="text-lg font-semibold text-yellow-400 mb-4">Social Media Handles</h3>
-                <div className="grid md:grid-cols-3 gap-4">
+                <h3 className="text-base md:text-lg font-semibold text-yellow-400 mb-3 md:mb-4">Social Media Handles</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-white/90 text-sm font-semibold mb-2">
                       Instagram
@@ -260,7 +259,7 @@ const OfferBasedBookingPage: React.FC = () => {
                       name="instagram"
                       value={formData.instagram}
                       onChange={handleInputChange}
-                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                       placeholder="@yourusername"
                     />
                   </div>
@@ -273,7 +272,7 @@ const OfferBasedBookingPage: React.FC = () => {
                       name="tiktok"
                       value={formData.tiktok}
                       onChange={handleInputChange}
-                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                       placeholder="@yourusername"
                     />
                   </div>
@@ -286,7 +285,7 @@ const OfferBasedBookingPage: React.FC = () => {
                       name="twitter"
                       value={formData.twitter}
                       onChange={handleInputChange}
-                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                      className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                       placeholder="@yourusername"
                     />
                   </div>
@@ -294,7 +293,7 @@ const OfferBasedBookingPage: React.FC = () => {
               </div>
 
               {/* Event Details */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
                   <label className="block text-white/90 text-sm font-semibold mb-2">
                     Event Type *
@@ -304,7 +303,7 @@ const OfferBasedBookingPage: React.FC = () => {
                     value={formData.eventType}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                   >
                     <option value="">Select event type</option>
                     {eventTypes.map(type => (
@@ -322,7 +321,7 @@ const OfferBasedBookingPage: React.FC = () => {
                     value={formData.eventDate}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                    className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                   />
                 </div>
               </div>
@@ -338,12 +337,10 @@ const OfferBasedBookingPage: React.FC = () => {
                   value={formData.offerAmount}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                   placeholder="e.g., $5,000 USD"
                 />
-              </div>
-
-              <div>
+              </div>              <div>
                 <label className="block text-white/90 text-sm font-semibold mb-2">
                   Event Description & Additional Details *
                 </label>
@@ -353,7 +350,7 @@ const OfferBasedBookingPage: React.FC = () => {
                   onChange={handleInputChange}
                   required
                   rows={6}
-                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation"
                   placeholder="Describe your event, venue details, audience size, technical requirements, and any other relevant information..."
                 />
               </div>
@@ -369,23 +366,23 @@ const OfferBasedBookingPage: React.FC = () => {
                   onChange={handleFileChange}
                   multiple
                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.mp3,.mp4,.zip"
-                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20"
+                  className="w-full bg-gray-800/50 border border-gray-600/50 rounded-lg px-4 py-3 text-white focus:border-red-500/50 focus:outline-none focus:ring-2 focus:ring-red-500/20 touch-manipulation file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-500 file:text-white hover:file:bg-red-600"
                 />
-                <p className="text-white/60 text-sm mt-2">
+                <p className="text-white/60 text-xs md:text-sm mt-2">
                   Upload music, event flyers, venue info, or other relevant documents (PDF, DOC, images, audio, video)
                 </p>
               </div>
 
               {/* Payment Information */}
-              <div className="bg-gradient-to-r from-green-900/20 to-blue-900/20 rounded-lg p-6 border border-green-500/30">
-                <h3 className="text-lg font-semibold text-green-400 mb-3">
+              <div className="bg-gradient-to-r from-green-900/20 to-blue-900/20 rounded-lg p-4 md:p-6 border border-green-500/30">
+                <h3 className="text-base md:text-lg font-semibold text-green-400 mb-3">
                   💳 Booking Consultation Fee: $25 USD
                 </h3>
-                <p className="text-white/80 text-sm mb-3">
+                <p className="text-white/80 text-xs md:text-sm mb-3">
                   A non-refundable consultation fee is required to process your booking request. 
                   This ensures serious inquiries and covers our time reviewing your proposal.
                 </p>
-                <p className="text-yellow-400 text-sm">
+                <p className="text-yellow-400 text-xs md:text-sm">
                   💫 Fee is credited toward your final booking if we accept your offer!
                 </p>
               </div>
@@ -395,7 +392,7 @@ const OfferBasedBookingPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 disabled:from-gray-600 disabled:to-gray-800 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed"
+                  className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 disabled:from-gray-600 disabled:to-gray-800 text-white font-bold py-4 px-6 md:px-8 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed touch-manipulation w-full md:w-auto"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center">
@@ -408,7 +405,7 @@ const OfferBasedBookingPage: React.FC = () => {
                 </button>
               </div>
 
-              <div className="text-center text-white/60 text-sm">
+              <div className="text-center text-white/60 text-xs md:text-sm">
                 <p>By submitting this form, you agree to our terms and conditions.</p>
                 <p>We typically respond to booking requests within 24-48 hours.</p>
               </div>
@@ -417,37 +414,38 @@ const OfferBasedBookingPage: React.FC = () => {
         </div>
 
         {/* FAQ Section */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold text-center mb-8 text-yellow-400">
+        <div className="mt-12 md:mt-16 max-w-4xl mx-auto">
+          <h3 className="text-xl md:text-2xl font-bold text-center mb-6 md:mb-8 text-yellow-400">
             Frequently Asked Questions
           </h3>
-          <div className="space-y-6">
-            <div className="bg-gray-900/30 rounded-lg p-6 border border-gray-600/20">
-              <h4 className="text-lg font-semibold text-red-400 mb-3">
+          <div className="space-y-4 md:space-y-6">
+            <div className="bg-gray-900/30 rounded-lg p-4 md:p-6 border border-gray-600/20">
+              <h4 className="text-base md:text-lg font-semibold text-red-400 mb-3">
                 How does the booking process work?
               </h4>
-              <p className="text-white/80">
+              <p className="text-white/80 text-sm md:text-base">
                 Submit your offer with the consultation fee. We review all submissions within 24-48 hours. 
                 If we're interested, we'll contact you to discuss details and negotiate terms.
               </p>
             </div>
-            <div className="bg-gray-900/30 rounded-lg p-6 border border-gray-600/20">
-              <h4 className="text-lg font-semibold text-red-400 mb-3">
+            <div className="bg-gray-900/30 rounded-lg p-4 md:p-6 border border-gray-600/20">
+              <h4 className="text-base md:text-lg font-semibold text-red-400 mb-3">
                 What types of events do you accept?
               </h4>
-              <p className="text-white/80">
+              <p className="text-white/80 text-sm md:text-base">
                 We consider all types of professional opportunities including live performances, 
                 collaborations, photo/video shoots, corporate events, and special engagements.
               </p>
             </div>
-            <div className="bg-gray-900/30 rounded-lg p-6 border border-gray-600/20">
-              <h4 className="text-lg font-semibold text-red-400 mb-3">
+            <div className="bg-gray-900/30 rounded-lg p-4 md:p-6 border border-gray-600/20">
+              <h4 className="text-base md:text-lg font-semibold text-red-400 mb-3">
                 Is the consultation fee refundable?
               </h4>
-              <p className="text-white/80">
+              <p className="text-white/80 text-sm md:text-base">
                 The $25 consultation fee is non-refundable, but if we accept your booking, 
                 this amount will be credited toward your final payment.
-              </p>          </div>
+              </p>
+            </div>
         </div>
       </div>
 

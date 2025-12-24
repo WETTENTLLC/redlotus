@@ -9,6 +9,7 @@ import { auth } from '../firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import lotusLogo from '../assets/lotus-each-album.png';
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'media' | 'store' | 'content' | 'messages' | 'quotes' | 'fanart' | 'bookings'>('store');
@@ -106,7 +107,10 @@ const AdminDashboard: React.FC = () => {
       <header className="bg-red-lotus text-white shadow-md">
         <div className="container mx-auto py-4 px-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold">Red Lotus Admin</h1>
+            <div className="flex items-center gap-3">
+              <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12" />
+              <h1 className="text-2xl font-bold">Red Lotus Admin</h1>
+            </div>
             <button 
               onClick={() => auth.signOut()}
               className="px-4 py-1 bg-white bg-opacity-20 rounded hover:bg-opacity-30 transition"

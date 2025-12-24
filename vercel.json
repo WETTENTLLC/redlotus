@@ -1,17 +1,53 @@
 {
   "version": 2,
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/assets/(.*)", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
-    { "src": "/(.*\\.(js|css|png|jpg|jpeg|svg|ico)$)", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
-    { "src": "/(.*)", "dest": "/index.html", "headers": { "cache-control": "public, max-age=0, must-revalidate" } }
+  "name": "red-lotus-official",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
   ],
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "github": {
-    "silent": true
-  },
-  "trailingSlash": false,
-  "cleanUrls": true,
-  "framework": "vite"
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "app/api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }

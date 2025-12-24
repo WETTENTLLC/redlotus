@@ -117,7 +117,7 @@ const Diagnostics: React.FC = () => {
                       id="testEmail"
                       type="email"
                       value={testEmail}
-                      onChange={(e) => setTestEmail(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTestEmail(e.target.value)}
                       required
                       className="w-full px-3 py-2 border rounded-md"
                     />
@@ -131,7 +131,7 @@ const Diagnostics: React.FC = () => {
                       id="testPassword"
                       type="password"
                       value={testPassword}
-                      onChange={(e) => setTestPassword(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTestPassword(e.target.value)}
                       required
                       className="w-full px-3 py-2 border rounded-md"
                     />

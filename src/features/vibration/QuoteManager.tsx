@@ -59,14 +59,17 @@ const QuoteManager: React.FC = () => {
       const q = query(collection(db, 'quotes'), orderBy('createdAt', 'desc'));
       const querySnapshot = await getDocs(q);
       const fetchedQuotes = querySnapshot.docs.map(doc => {
+        const data = doc.data();
         return { 
           id: doc.id, 
-          ...doc.data(),
-          createdAt: doc.data().createdAt.toDate()
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt)
         } as Quote;
       });
       setQuotes(fetchedQuotes);
+      setError(null);
     } catch (err: any) {
+      console.error('Error fetching quotes:', err);
       setError('Error fetching quotes: ' + err.message);
     } finally {
       setIsLoading(false);
@@ -81,14 +84,20 @@ const QuoteManager: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!text.trim() || !author.trim()) {
+      setError('Please fill in all required fields');
+      return;
+    }
+    
     try {
+      setError(null);
       if (editingQuote) {
         // Update existing quote
         if (editingQuote.id) {
           await updateDoc(doc(db, 'quotes', editingQuote.id), {
-            text,
-            author,
-            category,
+            text: text.trim(),
+            author: author.trim(),
+            category: category.trim(),
             featured
           });
           
@@ -97,24 +106,25 @@ const QuoteManager: React.FC = () => {
           resetForm();
           
           // Refresh quotes
-          fetchQuotes();
+          await fetchQuotes();
         }
       } else {
         // Add new quote
         const quoteData = {
-          text,
-          author,
-          category,
+          text: text.trim(),
+          author: author.trim(),
+          category: category.trim() || 'General',
           featured,
           createdAt: new Date()
         };
         
         await addDoc(collection(db, 'quotes'), quoteData);
         resetForm();
-        fetchQuotes();
+        await fetchQuotes();
       }
     } catch (err: any) {
-      setError('Error saving quote: ' + err.message);
+      console.error('Error saving quote:', err);
+      setError('Error saving quote: ' + (err.message || 'Unknown error occurred'));
     }
   };
 

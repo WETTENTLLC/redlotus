@@ -20,11 +20,10 @@ service firebase.storage {
       allow read: if true; // Public read access
       allow write: if request.auth != null; // Only authenticated users can upload
     }
-    
-    // Fan art uploads - allow authenticated users to upload, public read
+      // Fan art uploads - allow anonymous uploads for fan submissions, public read
     match /fanArt/{allPaths=**} {
       allow read: if true; // Public read access
-      allow write: if request.auth != null; // Authenticated users can upload fan art
+      allow write: if true; // Allow anonymous uploads for fan art submissions
     }
     
     // Default rule for other paths - more restrictive

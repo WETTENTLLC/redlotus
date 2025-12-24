@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "github": {
+    "enabled": false
+  },
+  "builds": [
+    { "src": "src/pages/SetupGuidePage.tsx", "use": "@vercel/static" }
+  ]
+}

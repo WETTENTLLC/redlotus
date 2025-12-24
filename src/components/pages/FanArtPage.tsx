@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
+import lotusLogo from '../../assets/lotus-each-album.png';
 
 // Analytics will be tracked through the main app component
 
@@ -105,11 +106,9 @@ const FanArtPage: React.FC = () => {
     }
 
     setUploading(true);
-    setUploadError(null);
-
-    try {
+    setUploadError(null);    try {
       // Upload image to Firebase Storage
-      const storageRef = ref(storage, `fanart/${Date.now()}_${selectedFile.name}`);
+      const storageRef = ref(storage, `fanArt/${Date.now()}_${selectedFile.name}`);
       const snapshot = await uploadBytes(storageRef, selectedFile);
       const downloadURL = await getDownloadURL(snapshot.ref);
 
@@ -158,15 +157,17 @@ const FanArtPage: React.FC = () => {
     setSelectedImage(null);
   };
 
-  return (
-    <div className="min-h-screen bg-black text-white">
+  return (    <div className="min-h-screen bg-black text-white">
       {/* Hero Section */}
-      <div className="relative h-96 bg-gradient-to-r from-red-900 via-red-700 to-red-500 flex items-center justify-center">
-        <div className="text-center z-10">
-          <h1 className="text-6xl font-bold mb-4 text-white drop-shadow-lg">
-            🎨 FAN ART GALLERY
-          </h1>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto px-4">
+      <div className="relative h-64 md:h-96 bg-gradient-to-r from-red-900 via-red-700 to-red-500 flex items-center justify-center">
+        <div className="text-center z-10 px-4">          <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
+            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-32 md:h-24" />
+            <h1 className="text-2xl md:text-6xl font-bold text-white drop-shadow-lg text-shadow">
+              FAN ART GALLERY
+            </h1>
+            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-32 md:h-24" />
+          </div>
+          <p className="text-sm md:text-xl text-white/90 max-w-2xl mx-auto px-4 leading-relaxed">
             Amazing artwork created by the Red Lotus community. 
             Share your creativity and celebrate the music!
           </p>
@@ -175,27 +176,25 @@ const FanArtPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-6 md:py-12">
           {/* Upload Success Message */}
         {uploadSuccess && (
           <div className="bg-green-900/50 border border-green-500 rounded-lg p-4 mb-6 text-center">
             <p className="text-green-400 font-bold">🎉 Your artwork has been submitted for review!</p>
             <p className="text-white/80 mt-2">We'll review it and add it to the gallery if approved. Thank you for sharing your creativity!</p>
           </div>
-        )}
-
-        {/* Submission Call-to-Action */}
-        <div className="bg-gradient-to-r from-red-900/20 to-yellow-900/20 rounded-lg p-8 mb-12 border border-red-500/30">
+        )}        {/* Submission Call-to-Action */}
+        <div className="bg-gradient-to-r from-red-900/20 to-yellow-900/20 rounded-lg p-4 md:p-8 mb-8 md:mb-12 border border-red-500/30">
           <div className="text-center">
-            <h2 className="text-3xl font-bold mb-4 text-red-400">
+            <h2 className="text-xl md:text-3xl font-bold mb-3 md:mb-4 text-red-400">
               Submit Your Fan Art!
             </h2>
-            <p className="text-lg mb-6 text-white/90">
+            <p className="text-sm md:text-lg mb-4 md:mb-6 text-white/90">
               Created something inspired by Red Lotus? Submit your art directly for review and potential gallery feature!
             </p>
             <button
               onClick={() => setShowUploadForm(true)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full transition-colors"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 md:px-8 rounded-full transition-colors touch-manipulation"
             >
               🎨 Submit Your Art
             </button>
@@ -205,12 +204,13 @@ const FanArtPage: React.FC = () => {
         {/* Upload Form Modal */}
         {showUploadForm && (
           <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-900 rounded-lg p-8 max-w-md w-full max-h-[90vh] overflow-y-auto border border-red-500/30">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold text-red-400">Submit Fan Art</h3>
+            <div className="bg-gray-900 rounded-lg p-4 md:p-8 max-w-md w-full max-h-[90vh] overflow-y-auto border border-red-500/30 mobile-scroll">
+              <div className="flex justify-between items-center mb-4 md:mb-6">
+                <h3 className="text-xl md:text-2xl font-bold text-red-400">Submit Fan Art</h3>
                 <button 
                   onClick={() => setShowUploadForm(false)}
-                  className="text-white/60 hover:text-white text-2xl"
+                  className="text-white/60 hover:text-white text-2xl p-2 touch-manipulation"
+                  aria-label="Close"
                 >
                   ×
                 </button>
@@ -218,108 +218,107 @@ const FanArtPage: React.FC = () => {
 
               <form onSubmit={handleSubmitArt} className="space-y-4">
                 <div>
-                  <label className="block text-white/90 mb-2">Artwork Title*</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Artwork Title*</label>
                   <input
                     type="text"
                     required
                     value={uploadForm.title}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUploadForm({...uploadForm, title: e.target.value})}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none touch-manipulation"
                     placeholder="My Red Lotus Fan Art"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 mb-2">Your Name/Artist Name*</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Your Name/Artist Name*</label>
                   <input
                     type="text"
                     required
                     value={uploadForm.artistName}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUploadForm({...uploadForm, artistName: e.target.value})}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none touch-manipulation"
                     placeholder="Your artist name"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 mb-2">Email*</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Email*</label>
                   <input
                     type="email"
                     required
                     value={uploadForm.email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUploadForm({...uploadForm, email: e.target.value})}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none touch-manipulation"
                     placeholder="your@email.com"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 mb-2">Social Handle (optional)</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Social Handle (optional)</label>
                   <input
                     type="text"
                     value={uploadForm.socialHandle}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUploadForm({...uploadForm, socialHandle: e.target.value})}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none touch-manipulation"
                     placeholder="@yourhandle"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 mb-2">Description (optional)</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Description (optional)</label>
                   <textarea
                     value={uploadForm.description}
                     onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setUploadForm({...uploadForm, description: e.target.value})}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none h-20"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none h-20 touch-manipulation"
                     placeholder="Tell us about your artwork..."
                   />
                 </div>
 
                 <div>
-                  <label className="block text-white/90 mb-2">Select Image File* (Max 5MB)</label>
+                  <label className="block text-white/90 mb-2 text-sm md:text-base">Select Image File* (Max 5MB)</label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleFileSelect}
-                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-500 file:text-white hover:file:bg-red-600"
+                    className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white focus:border-red-500 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-500 file:text-white hover:file:bg-red-600 touch-manipulation"
                   />
                   {selectedFile && (
-                    <p className="text-green-400 mt-2">📁 {selectedFile.name}</p>
+                    <p className="text-green-400 mt-2 text-sm">📁 {selectedFile.name}</p>
                   )}
                 </div>
 
                 {uploadError && (
                   <div className="bg-red-900/50 border border-red-500 rounded p-3">
-                    <p className="text-red-400">{uploadError}</p>
+                    <p className="text-red-400 text-sm">{uploadError}</p>
                   </div>
                 )}
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex gap-3 pt-4">
                   <button
                     type="button"
                     onClick={() => setShowUploadForm(false)}
-                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded font-medium transition-colors"
+                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 rounded font-medium transition-colors touch-manipulation"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={uploading || !selectedFile}
-                    className="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 rounded font-medium transition-colors"
+                    className="flex-1 bg-red-500 hover:bg-red-600 disabled:bg-gray-600 disabled:cursor-not-allowed text-white py-3 rounded font-medium transition-colors touch-manipulation"
                   >
                     {uploading ? '⏳ Uploading...' : '🚀 Submit'}
                   </button>
                 </div>
               </form>
             </div>
-          </div>        )}
-
-        {/* Fan Art Grid */}
+          </div>
+        )}        {/* Fan Art Grid */}
         {fanArtItems.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
             {fanArtItems.map((item: FanArtItem) => (
               <div 
                 key={item.id}
-                className="bg-gray-900/50 rounded-lg overflow-hidden border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 cursor-pointer"
+                className="bg-gray-900/50 rounded-lg overflow-hidden border border-red-500/20 hover:border-red-500/40 transition-all duration-300 hover:scale-105 cursor-pointer touch-manipulation"
                 onClick={() => openImageModal(item.image)}
               >
                 <div className="aspect-square bg-gray-800 flex items-center justify-center">
@@ -334,8 +333,8 @@ const FanArtPage: React.FC = () => {
                     }}
                   />
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-red-400 mb-1">
+                <div className="p-3 md:p-4">
+                  <h3 className="text-base md:text-lg font-semibold text-red-400 mb-1">
                     {item.title}
                   </h3>
                   <p className="text-white/80 text-sm mb-2">
@@ -347,7 +346,7 @@ const FanArtPage: React.FC = () => {
                     </p>
                   )}
                   {item.description && (
-                    <p className="text-white/60 text-sm">
+                    <p className="text-white/60 text-sm line-clamp-2">
                       {item.description}
                     </p>
                   )}
@@ -356,12 +355,12 @@ const FanArtPage: React.FC = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16">
-            <div className="text-6xl mb-4">🎨</div>
-            <h3 className="text-2xl font-semibold text-red-400 mb-4">
+          <div className="text-center py-12 md:py-16">
+            <div className="text-4xl md:text-6xl mb-4">🎨</div>
+            <h3 className="text-xl md:text-2xl font-semibold text-red-400 mb-4">
               Gallery Coming Soon!
             </h3>
-            <p className="text-white/80 max-w-md mx-auto">
+            <p className="text-white/80 max-w-md mx-auto text-sm md:text-base">
               We're preparing to showcase amazing fan art from the Red Lotus community. 
               Be the first to submit your artwork!
             </p>
@@ -369,14 +368,14 @@ const FanArtPage: React.FC = () => {
         )}
 
         {/* Community Guidelines */}
-        <div className="mt-16 bg-gray-900/30 rounded-lg p-8 border border-yellow-500/20">
-          <h3 className="text-2xl font-bold text-yellow-400 mb-6 text-center">
+        <div className="mt-12 md:mt-16 bg-gray-900/30 rounded-lg p-4 md:p-8 border border-yellow-500/20">
+          <h3 className="text-xl md:text-2xl font-bold text-yellow-400 mb-4 md:mb-6 text-center">
             Community Art Guidelines
           </h3>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
             <div>
-              <h4 className="text-lg font-semibold text-red-400 mb-3">✅ What We Love:</h4>
-              <ul className="space-y-2 text-white/80">
+              <h4 className="text-base md:text-lg font-semibold text-red-400 mb-3">✅ What We Love:</h4>
+              <ul className="space-y-2 text-white/80 text-sm md:text-base">
                 <li>• Original artwork inspired by Red Lotus</li>
                 <li>• Digital art, paintings, drawings, photography</li>
                 <li>• Creative interpretations of lyrics or themes</li>
@@ -385,8 +384,8 @@ const FanArtPage: React.FC = () => {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold text-red-400 mb-3">📋 Submission Info:</h4>
-              <ul className="space-y-2 text-white/80">
+              <h4 className="text-base md:text-lg font-semibold text-red-400 mb-3">📋 Submission Info:</h4>
+              <ul className="space-y-2 text-white/80 text-sm md:text-base">
                 <li>• High-resolution images (min 1200px)</li>
                 <li>• Include your artist name and social handle</li>
                 <li>• Brief description of your artwork</li>
@@ -412,7 +411,8 @@ const FanArtPage: React.FC = () => {
             />
             <button
               onClick={closeImageModal}
-              className="absolute top-4 right-4 text-white/80 hover:text-white text-2xl bg-black/50 rounded-full w-10 h-10 flex items-center justify-center"
+              className="absolute top-2 md:top-4 right-2 md:right-4 text-white/80 hover:text-white text-xl md:text-2xl bg-black/50 rounded-full w-8 h-8 md:w-10 md:h-10 flex items-center justify-center touch-manipulation"
+              aria-label="Close image"
             >
               ×
             </button>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Console Error Test - Red Lotus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .error-log {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #4ade80;
+        }
+        .error {
+            color: #ef4444;
+        }
+        .warning {
+            color: #fbbf24;
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Red Lotus - Console Error Test</h1>
+    <p>This page tests for JavaScript console errors and analytics initialization.</p>
+    
+    <button onclick="testAnalytics()">Test Analytics</button>
+    <button onclick="testSEO()">Test SEO</button>
+    <button onclick="clearLog()">Clear Log</button>
+    
+    <div id="log" class="error-log">Console output will appear here...</div>
+
+    <script>
+        const log = document.getElementById('log');
+        
+        // Capture console errors
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const originalConsoleLog = console.log;
+        
+        console.error = function(...args) {
+            log.innerHTML += `<span class="error">[ERROR] ${args.join(' ')}</span>\n`;
+            originalConsoleError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+            log.innerHTML += `<span class="warning">[WARN] ${args.join(' ')}</span>\n`;
+            originalConsoleWarn.apply(console, args);
+        };
+        
+        console.log = function(...args) {
+            log.innerHTML += `<span class="success">[LOG] ${args.join(' ')}</span>\n`;
+            originalConsoleLog.apply(console, args);
+        };
+        
+        function testAnalytics() {
+            log.innerHTML += `<span class="success">[TEST] Testing Analytics Service...</span>\n`;
+            
+            // Test environment variables
+            const gaId = 'undefined'; // Would be import.meta.env.VITE_GA_MEASUREMENT_ID in real app
+            const gtmId = 'undefined'; // Would be import.meta.env.VITE_GTM_CONTAINER_ID in real app
+            const hotjarId = 'undefined'; // Would be import.meta.env.VITE_HOTJAR_ID in real app
+            const fbPixelId = 'undefined'; // Would be import.meta.env.VITE_FACEBOOK_PIXEL_ID in real app
+            
+            log.innerHTML += `<span class="success">[ENV] GA ID: ${gaId}</span>\n`;
+            log.innerHTML += `<span class="success">[ENV] GTM ID: ${gtmId}</span>\n`;
+            log.innerHTML += `<span class="success">[ENV] Hotjar ID: ${hotjarId}</span>\n`;
+            log.innerHTML += `<span class="success">[ENV] FB Pixel ID: ${fbPixelId}</span>\n`;
+            
+            // Simulate analytics initialization checks
+            if (!gaId || gaId === 'undefined') {
+                log.innerHTML += `<span class="success">[OK] Google Analytics not configured - skipping initialization</span>\n`;
+            }
+            if (!gtmId || gtmId === 'undefined') {
+                log.innerHTML += `<span class="success">[OK] Google Tag Manager not configured - skipping initialization</span>\n`;
+            }
+            if (!hotjarId || hotjarId === 'undefined') {
+                log.innerHTML += `<span class="success">[OK] Hotjar not configured - skipping initialization</span>\n`;
+            }
+            if (!fbPixelId || fbPixelId === 'undefined') {
+                log.innerHTML += `<span class="success">[OK] Facebook Pixel not configured - skipping initialization</span>\n`;
+            }
+        }
+        
+        function testSEO() {
+            log.innerHTML += `<span class="success">[TEST] Testing SEO Components...</span>\n`;
+            
+            // Check if meta tags are present
+            const title = document.title;
+            const metaDescription = document.querySelector('meta[name="description"]');
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            
+            log.innerHTML += `<span class="success">[SEO] Page Title: ${title}</span>\n`;
+            log.innerHTML += `<span class="success">[SEO] Meta Description: ${metaDescription ? metaDescription.content : 'Not found'}</span>\n`;
+            log.innerHTML += `<span class="success">[SEO] OG Title: ${ogTitle ? ogTitle.content : 'Not found'}</span>\n`;
+            log.innerHTML += `<span class="success">[SEO] OG Description: ${ogDescription ? ogDescription.content : 'Not found'}</span>\n`;
+        }
+        
+        function clearLog() {
+            log.innerHTML = 'Console cleared...\n';
+        }
+        
+        // Test on page load
+        window.addEventListener('load', function() {
+            log.innerHTML += `<span class="success">[READY] Page loaded successfully</span>\n`;
+            
+            // Check for common error patterns
+            setTimeout(() => {
+                if (!window.dataLayer) {
+                    log.innerHTML += `<span class="success">[OK] dataLayer not initialized (expected when GTM not configured)</span>\n`;
+                }
+                if (!window.gtag) {
+                    log.innerHTML += `<span class="success">[OK] gtag not initialized (expected when GA not configured)</span>\n`;
+                }
+                if (!window.hj) {
+                    log.innerHTML += `<span class="success">[OK] Hotjar not initialized (expected when not configured)</span>\n`;
+                }
+                if (!window.fbq) {
+                    log.innerHTML += `<span class="success">[OK] Facebook Pixel not initialized (expected when not configured)</span>\n`;
+                }
+            }, 1000);
+        });
+        
+        // Catch unhandled errors
+        window.addEventListener('error', function(e) {
+            log.innerHTML += `<span class="error">[UNHANDLED ERROR] ${e.error ? e.error.message : e.message} at ${e.filename}:${e.lineno}</span>\n`;
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            log.innerHTML += `<span class="error">[UNHANDLED PROMISE REJECTION] ${e.reason}</span>\n`;
+        });
+    </script>
+</body>
+</html>

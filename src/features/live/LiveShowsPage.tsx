@@ -177,9 +177,10 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
           <div className="w-full bg-black/60 p-4 rounded-lg mb-6">
             <h3 className="text-xl font-bold text-yellow-lotus mb-2">Already have a ticket?</h3>
             <form onSubmit={handleAccessCodeSubmit} className="flex flex-col md:flex-row gap-3">
-              <div className="flex-1">              <select 
+              <div className="flex-1">
+                <select 
                   className="w-full px-4 py-2 rounded bg-gray-800 text-white"
-                  value={selectedShow?.id || ''}
+                  value={selectedShow?.id ?? ''}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                     const show = liveShows.find(s => s.id === e.target.value);
                     setSelectedShow(show || null);
@@ -194,7 +195,8 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
                   ))}
                 </select>
               </div>
-              <div className="flex-1">                <input
+              <div className="flex-1">
+                <input
                   type="text"
                   className="w-full px-4 py-2 rounded bg-gray-800 text-white"
                   placeholder="Enter access code"
