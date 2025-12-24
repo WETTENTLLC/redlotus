@@ -200,6 +200,7 @@ function App() {
       });
       
       setEmailSubmissionStatus('success');
+      setUserTribe(activeTheme); // Set the user tribe
       setTribeEmail('');
       
       // Track successful subscription (with error handling)
@@ -527,63 +528,88 @@ function App() {
           )}
 
           {activeSection === 'tribe' && (
-            <div className="w-full max-w-6xl px-2 md:px-0">
-              {userTribe ? (
-                <TribeExperience tribe={userTribe} isActive={true} />
-              ) : (
-                <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full mx-auto">
-                  <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Join the Lotus Tribe</h2>
-                  <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and enter your email to unlock exclusive content</p>
-                  
-                  <SimpleTribeActivation 
-                    onTribeSelect={handleThemeChange}
-                    currentTribe={userTribe}
-                  />
-                  
-                  {/* Legacy email form for fallback */}
-                  {!userTribe && (
-                    <div className="mt-8 max-w-md mx-auto">
-                      <form onSubmit={handleEmailSubscription} className="space-y-4">
-                        <div>
-                          <input
-                            id="legacy-tribe-email"
-                            name="email"
-                            type="email"
-                            value={tribeEmail}
-                            onChange={(e) => setTribeEmail(e.target.value)}
-                            placeholder="Enter your email to join"
-                            autoComplete="email"
-                            required
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none"
-                          />
+            <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full mx-auto">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Join the Lotus Tribe</h2>
+              <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and join with your email</p>
+              
+              {!userTribe ? (
+                <div className="space-y-8">
+                  {/* Tribe Selection */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {Object.entries(themeColors).map(([key, tribe]) => (
+                      <div
+                        key={key}
+                        className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${
+                          activeTheme === key 
+                            ? `${tribe.bg} border-4 border-white shadow-lg` 
+                            : 'bg-gray-800 hover:bg-gray-700 border-2 border-gray-600'
+                        }`}
+                        onClick={() => setActiveTheme(key as 'red' | 'yellow' | 'blue')}
+                      >
+                        <div className="text-center">
+                          <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center`}>
+                            <span className="text-2xl">🪷</span>
+                          </div>
+                          <h3 className={`text-xl font-bold mb-2 ${activeTheme === key ? 'text-white' : 'text-gray-200'}`}>
+                            {tribe.name} Lotus
+                          </h3>
+                          <p className={`text-sm mb-2 ${activeTheme === key ? 'text-gray-100' : 'text-gray-400'}`}>
+                            {tribe.description}
+                          </p>
+                          {activeTheme === key && (
+                            <div className="mt-4 text-white font-bold">
+                              ✓ Selected
+                            </div>
+                          )}
                         </div>
-                        <button
-                          type="submit"
-                          disabled={isSubmittingEmail}
-                          className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all ${
-                            isSubmittingEmail 
-                              ? 'bg-gray-600 cursor-not-allowed' 
-                              : `${themeColors[activeTheme].bg} hover:opacity-80`
-                          }`}
-                        >
-                          {isSubmittingEmail ? 'Joining...' : 'Join Tribe'}
-                        </button>
-                        
-                        {emailSubmissionStatus === 'success' && (
-                          <div className="text-green-400 text-center">
-                            ✅ Successfully joined the tribe!
-                          </div>
-                        )}
-                        
-                        {emailSubmissionStatus === 'error' && (
-                          <div className="text-red-400 text-center">
-                            ❌ {emailError}
-                          </div>
-                        )}
-                      </form>
-                    </div>
-                  )}
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* Email Form */}
+                  <div className="max-w-md mx-auto">
+                    <form onSubmit={handleEmailSubscription} className="space-y-4">
+                      <div>
+                        <input
+                          id="tribe-join-email"
+                          name="email"
+                          type="email"
+                          value={tribeEmail}
+                          onChange={(e) => setTribeEmail(e.target.value)}
+                          placeholder="Enter your email to join"
+                          autoComplete="email"
+                          required
+                          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none"
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={isSubmittingEmail}
+                        className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all ${
+                          isSubmittingEmail 
+                            ? 'bg-gray-600 cursor-not-allowed' 
+                            : `${themeColors[activeTheme].bg} hover:opacity-80`
+                        }`}
+                      >
+                        {isSubmittingEmail ? 'Joining...' : `Join ${themeColors[activeTheme].name} Lotus Tribe`}
+                      </button>
+                      
+                      {emailSubmissionStatus === 'success' && (
+                        <div className="text-green-400 text-center">
+                          ✅ Successfully joined the {themeColors[activeTheme].name} Lotus tribe!
+                        </div>
+                      )}
+                      
+                      {emailSubmissionStatus === 'error' && (
+                        <div className="text-red-400 text-center">
+                          ❌ {emailError || 'Error joining the tribe. Please try again.'}
+                        </div>
+                      )}
+                    </form>
+                  </div>
                 </div>
+              ) : (
+                <TribeExperience tribe={userTribe} isActive={true} />
               )}
             </div>
           )}
