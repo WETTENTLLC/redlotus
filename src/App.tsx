@@ -182,53 +182,54 @@ function App() {
     setEmailSubmissionStatus('idle');
     setEmailError('');
     
-    // Security validation
-    const sanitizedEmail = SecurityService.sanitizeInput(tribeEmail);
-    if (!SecurityService.validateEmail(sanitizedEmail)) {
-      setEmailError('Please enter a valid email address.');
-      setIsSubmittingEmail(false);
-      return;
-    }
-    
-    // Rate limiting check
-    if (!SecurityService.checkRateLimit(sanitizedEmail, 3, 300000)) { // 3 requests per 5 minutes
-      setEmailError('Too many subscription attempts. Please try again later.');
-      setIsSubmittingEmail(false);
-      return;
-    }
-    
     try {
-      // Add email to Firestore
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(tribeEmail)) {
+        setEmailError('Please enter a valid email address.');
+        setIsSubmittingEmail(false);
+        return;
+      }
+      
+      // Add email to Firestore with simplified approach
       await addDoc(collection(db, 'subscriptions'), {
-        email: sanitizedEmail,
+        email: tribeEmail.trim(),
         timestamp: new Date(),
-        userAgent: navigator.userAgent,
-        theme: activeTheme
+        tribe: activeTheme,
+        subscribed: true
       });
       
       setEmailSubmissionStatus('success');
       setTribeEmail('');
       
-      // Track successful subscription
-      MonitoringService.trackEvent({
-        event: 'email_subscription',
-        category: 'engagement',
-        action: 'subscribe',
-        label: 'tribe_signup'
-      });
+      // Track successful subscription (with error handling)
+      try {
+        MonitoringService.trackEvent({
+          event: 'email_subscription',
+          category: 'engagement',
+          action: 'subscribe',
+          label: 'tribe_signup'
+        });
+      } catch (trackingError) {
+        console.warn('Analytics tracking failed:', trackingError);
+      }
       
     } catch (error) {
       console.error('Error subscribing email:', error);
       setEmailSubmissionStatus('error');
       setEmailError('Error joining the tribe. Please try again.');
       
-      // Log error
-      MonitoringService.logError({
-        level: 'error',
-        message: 'Email subscription failed',
-        url: window.location.href,
-        metadata: { email: sanitizedEmail, error: (error as Error).message }
-      });
+      // Log error (with error handling)
+      try {
+        MonitoringService.logError({
+          level: 'error',
+          message: 'Email subscription failed',
+          url: window.location.href,
+          metadata: { email: tribeEmail, error: (error as Error).message }
+        });
+      } catch (logError) {
+        console.warn('Error logging failed:', logError);
+      }
     } finally {
       setIsSubmittingEmail(false);
     }

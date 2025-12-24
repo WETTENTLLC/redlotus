@@ -8,6 +8,7 @@ interface Quote {
   author: string;
   category: string;
   featured: boolean;
+  tribe: 'all' | 'red' | 'yellow' | 'blue';
   createdAt: Date;
 }
 
@@ -48,6 +49,7 @@ const QuoteManager: React.FC = () => {
   const [author, setAuthor] = useState('');
   const [category, setCategory] = useState('');
   const [featured, setFeatured] = useState(false);
+  const [tribe, setTribe] = useState<'all' | 'red' | 'yellow' | 'blue'>('all');
   const [editingQuote, setEditingQuote] = useState<Quote | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,6 +65,7 @@ const QuoteManager: React.FC = () => {
         return { 
           id: doc.id, 
           ...data,
+          tribe: data.tribe || 'all', // Default to 'all' for existing quotes
           createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt)
         } as Quote;
       });
@@ -98,6 +101,7 @@ const QuoteManager: React.FC = () => {
             text: text.trim(),
             author: author.trim(),
             category: category.trim(),
+            tribe,
             featured
           });
           
@@ -114,6 +118,7 @@ const QuoteManager: React.FC = () => {
           text: text.trim(),
           author: author.trim(),
           category: category.trim() || 'General',
+          tribe,
           featured,
           createdAt: new Date()
         };
@@ -146,6 +151,7 @@ const QuoteManager: React.FC = () => {
     setText(quote.text);
     setAuthor(quote.author);
     setCategory(quote.category);
+    setTribe(quote.tribe || 'all');
     setFeatured(quote.featured);
   };
 
@@ -154,6 +160,7 @@ const QuoteManager: React.FC = () => {
     setText('');
     setAuthor('');
     setCategory('');
+    setTribe('all');
     setFeatured(false);
   };
 
@@ -214,6 +221,20 @@ const QuoteManager: React.FC = () => {
                   <option value="wisdom">Wisdom</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Target Tribe:</label>
+                <select
+                  value={tribe}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTribe(e.target.value as 'all' | 'red' | 'yellow' | 'blue')}
+                  required
+                  className="w-full px-3 py-2 border rounded-md"
+                >
+                  <option value="all">All Tribes</option>
+                  <option value="red">Red Lotus (Winter)</option>
+                  <option value="yellow">Yellow Lotus (Summer)</option>
+                  <option value="blue">Blue Lotus (Spring)</option>
+                </select>
+              </div>
               <div className="flex items-center">
                 <input
                   type="checkbox"
@@ -264,7 +285,17 @@ const QuoteManager: React.FC = () => {
                   className={`p-4 border rounded-lg ${quote.featured ? 'bg-yellow-50 border-yellow-200' : 'bg-white'}`}
                 >
                   <div className="flex justify-between">
-                    <span className="text-sm font-medium text-gray-500">{quote.category}</span>
+                    <div className="flex gap-2">
+                      <span className="text-sm font-medium text-gray-500">{quote.category}</span>
+                      <span className={`text-xs px-2 py-1 rounded ${
+                        quote.tribe === 'red' ? 'bg-red-100 text-red-800' :
+                        quote.tribe === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+                        quote.tribe === 'blue' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {quote.tribe === 'all' ? 'All Tribes' : `${quote.tribe.charAt(0).toUpperCase() + quote.tribe.slice(1)} Lotus`}
+                      </span>
+                    </div>
                     <div className="space-x-2">
                       <button
                         onClick={() => toggleFeatured(quote)}
