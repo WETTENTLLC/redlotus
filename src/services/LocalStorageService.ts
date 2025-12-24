@@ -38,6 +38,9 @@ export class LocalStorageService {
     posts.unshift(newPost);
     localStorage.setItem(this.POSTS_KEY, JSON.stringify(posts));
     
+    // Trigger custom event to notify components
+    window.dispatchEvent(new CustomEvent('postsUpdated'));
+    
     return newPost;
   }
 
@@ -76,6 +79,10 @@ export class LocalStorageService {
     
     posts[index] = { ...posts[index], ...updates };
     localStorage.setItem(this.POSTS_KEY, JSON.stringify(posts));
+    
+    // Trigger custom event to notify components
+    window.dispatchEvent(new CustomEvent('postsUpdated'));
+    
     return true;
   }
 

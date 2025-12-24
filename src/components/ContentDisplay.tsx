@@ -33,14 +33,34 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ section, tribe = 'all',
 
     loadPosts();
     
-    // Listen for storage changes
+    // Listen for custom posts update events
+    const handlePostsUpdate = () => loadPosts();
+    window.addEventListener('postsUpdated', handlePostsUpdate);
+    
+    // Listen for storage changes (for cross-tab updates)
     const handleStorageChange = () => loadPosts();
     window.addEventListener('storage', handleStorageChange);
     
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('postsUpdated', handlePostsUpdate);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [section, tribe, maxPosts]);
 
   if (posts.length === 0) {
+    // Debug: Show what's in localStorage for this section
+    const allPosts = LocalStorageService.getAllPosts();
+    const sectionPosts = LocalStorageService.getPostsBySection(section);
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`ContentDisplay Debug for section "${section}":`, {
+        allPosts: allPosts.length,
+        sectionPosts: sectionPosts.length,
+        tribe,
+        posts: sectionPosts
+      });
+    }
+    
     return null;
   }
 

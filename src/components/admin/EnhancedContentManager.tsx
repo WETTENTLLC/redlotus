@@ -180,6 +180,13 @@ const EnhancedContentManager: React.FC = () => {
             isActive: formData.isActive,
             isPinned: formData.isPinned
           });
+          
+          console.log('Post saved to localStorage:', {
+            section: formData.targetSection,
+            tribe: formData.targetTribe,
+            title: formData.title,
+            isActive: formData.isActive
+          });
         }
       }
 
