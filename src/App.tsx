@@ -531,10 +531,59 @@ function App() {
               {userTribe ? (
                 <TribeExperience tribe={userTribe} isActive={true} />
               ) : (
-                <SimpleTribeActivation 
-                  onTribeSelect={handleThemeChange}
-                  currentTribe={userTribe}
-                />
+                <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full mx-auto">
+                  <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Join the Lotus Tribe</h2>
+                  <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and enter your email to unlock exclusive content</p>
+                  
+                  <SimpleTribeActivation 
+                    onTribeSelect={handleThemeChange}
+                    currentTribe={userTribe}
+                  />
+                  
+                  {/* Legacy email form for fallback */}
+                  {!userTribe && (
+                    <div className="mt-8 max-w-md mx-auto">
+                      <form onSubmit={handleEmailSubscription} className="space-y-4">
+                        <div>
+                          <input
+                            id="legacy-tribe-email"
+                            name="email"
+                            type="email"
+                            value={tribeEmail}
+                            onChange={(e) => setTribeEmail(e.target.value)}
+                            placeholder="Enter your email to join"
+                            autoComplete="email"
+                            required
+                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none"
+                          />
+                        </div>
+                        <button
+                          type="submit"
+                          disabled={isSubmittingEmail}
+                          className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all ${
+                            isSubmittingEmail 
+                              ? 'bg-gray-600 cursor-not-allowed' 
+                              : `${themeColors[activeTheme].bg} hover:opacity-80`
+                          }`}
+                        >
+                          {isSubmittingEmail ? 'Joining...' : 'Join Tribe'}
+                        </button>
+                        
+                        {emailSubmissionStatus === 'success' && (
+                          <div className="text-green-400 text-center">
+                            ✅ Successfully joined the tribe!
+                          </div>
+                        )}
+                        
+                        {emailSubmissionStatus === 'error' && (
+                          <div className="text-red-400 text-center">
+                            ❌ {emailError}
+                          </div>
+                        )}
+                      </form>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           )}
