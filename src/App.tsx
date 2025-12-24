@@ -18,6 +18,8 @@ import TribeTransition from './components/TribeTransition';
 import TribeExperience from './components/TribeExperience';
 import SimpleTribeActivation from './components/SimpleTribeActivation';
 import CommunityForum from './features/community/CommunityForum';
+import { testFirebaseConnection, validateEnvironmentVariables } from './utils/firebaseTest';
+import TribeJoinModal from './components/TribeJoinModal';
 
 // Import images
 import lotusForEachAlbum from './assets/lotus-each-album.png';
@@ -67,6 +69,15 @@ function App() {
           console.warn('Environment configuration issues:', validation.errors);
         }
       }
+      
+      // Check for existing tribe membership
+      const existingMember = localStorage.getItem('currentTribeMember');
+      if (existingMember) {
+        const memberData = JSON.parse(existingMember);
+        setTribeMember(memberData);
+        setUserTribe(memberData.tribe);
+        setActiveTheme(memberData.tribe);
+      }
     } catch (error) {
       console.error('Failed to initialize production services:', error);
       // Continue without monitoring services if they fail
@@ -95,6 +106,14 @@ function App() {
   const [isSubmittingEmail, setIsSubmittingEmail] = useState(false);
   const [emailSubmissionStatus, setEmailSubmissionStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [emailError, setEmailError] = useState('');
+  
+  // Debug state for Firebase testing
+  const [debugInfo, setDebugInfo] = useState<string>('');
+  
+  // Tribe join modal state
+  const [showTribeModal, setShowTribeModal] = useState(false);
+  const [selectedTribeForJoin, setSelectedTribeForJoin] = useState<'red' | 'yellow' | 'blue'>('red');
+  const [tribeMember, setTribeMember] = useState<any>(null);
   
   // Define theme colors for styling elements
   const themeColors = {
@@ -175,9 +194,51 @@ function App() {
     MonitoringService.trackUserAction('vibrate_click', 'navigation', 'vibrate');
   };
 
+  // Handle tribe join modal
+  const handleTribeJoin = (tribe: 'red' | 'yellow' | 'blue') => {
+    setSelectedTribeForJoin(tribe);
+    setShowTribeModal(true);
+  };
+
+  const handleJoinSuccess = (memberData: any) => {
+    setTribeMember(memberData);
+    setUserTribe(memberData.tribe);
+    setActiveTheme(memberData.tribe);
+  };
+
+  // Debug function to test Firebase connection
+  const testFirebase = async () => {
+    try {
+      setDebugInfo('Testing Firebase connection...');
+      
+      // Validate environment variables first
+      const envValidation = validateEnvironmentVariables();
+      if (!envValidation.valid) {
+        setDebugInfo(`Missing env vars: ${envValidation.missing.join(', ')}`);
+        return;
+      }
+      
+      // Test Firebase connection
+      const result = await testFirebaseConnection();
+      if (result.success) {
+        setDebugInfo('✅ Firebase connection successful!');
+      } else {
+        setDebugInfo(`❌ Firebase error: ${result.error}`);
+      }
+    } catch (error) {
+      setDebugInfo(`❌ Test failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
   // Handle email subscription with security validation
   const handleEmailSubscription = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!tribeEmail.trim()) {
+      setEmailError('Please enter your email address.');
+      return;
+    }
+    
     setIsSubmittingEmail(true);
     setEmailSubmissionStatus('idle');
     setEmailError('');
@@ -185,15 +246,20 @@ function App() {
     try {
       // Basic email validation
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(tribeEmail)) {
+      if (!emailRegex.test(tribeEmail.trim())) {
         setEmailError('Please enter a valid email address.');
-        setIsSubmittingEmail(false);
+        setEmailSubmissionStatus('error');
         return;
+      }
+      
+      // Check if Firebase is properly initialized
+      if (!db) {
+        throw new Error('Database connection not available');
       }
       
       // Add email to Firestore with simplified approach
       await addDoc(collection(db, 'subscriptions'), {
-        email: tribeEmail.trim(),
+        email: tribeEmail.trim().toLowerCase(),
         timestamp: new Date(),
         tribe: activeTheme,
         subscribed: true
@@ -218,7 +284,21 @@ function App() {
     } catch (error) {
       console.error('Error subscribing email:', error);
       setEmailSubmissionStatus('error');
-      setEmailError('Error joining the tribe. Please try again.');
+      
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes('permission-denied')) {
+          setEmailError('Permission denied. Please try again later.');
+        } else if (error.message.includes('network')) {
+          setEmailError('Network error. Please check your connection.');
+        } else if (error.message.includes('Database connection')) {
+          setEmailError('Service temporarily unavailable. Please try again.');
+        } else {
+          setEmailError('Error joining the tribe. Please try again.');
+        }
+      } else {
+        setEmailError('Unexpected error occurred. Please try again.');
+      }
       
       // Log error (with error handling)
       try {
@@ -471,12 +551,25 @@ function App() {
                   Artist Admin
                 </button>
                 {EnvironmentService.isDevelopment() && (
-                  <button 
-                    onClick={() => window.location.href = '/production-test'} 
-                    className="text-yellow-400 opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4"
-                  >
-                    Production Test
-                  </button>
+                  <>
+                    <button 
+                      onClick={() => window.location.href = '/production-test'} 
+                      className="text-yellow-400 opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4 mr-4"
+                    >
+                      Production Test
+                    </button>
+                    <button 
+                      onClick={testFirebase} 
+                      className="text-green-400 opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4"
+                    >
+                      Test Firebase
+                    </button>
+                    {debugInfo && (
+                      <div className="mt-4 p-2 bg-black bg-opacity-50 rounded text-sm text-white">
+                        {debugInfo}
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -532,92 +625,43 @@ function App() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">🌸 Join the Lotus Tribe 🌸</h2>
               <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and unlock exclusive experiences</p>
               
-              {!userTribe ? (
-                <div className="space-y-8">
-                  {/* Tribe Selection Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {Object.entries(themeColors).map(([key, tribe]) => (
-                      <div
-                        key={key}
-                        className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${
-                          activeTheme === key 
-                            ? `${tribe.bg} border-4 border-white shadow-lg transform scale-105` 
-                            : 'bg-gray-800 hover:bg-gray-700 border-2 border-gray-600'
-                        }`}
-                        onClick={() => setActiveTheme(key as 'red' | 'yellow' | 'blue')}
-                      >
-                        <div className="text-center">
-                          <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center shadow-lg`}>
-                            <span className="text-3xl">🪷</span>
-                          </div>
-                          <h3 className={`text-2xl font-bold mb-3 ${activeTheme === key ? 'text-white' : 'text-gray-200'}`}>
-                            {tribe.name} Lotus
-                          </h3>
-                          <p className={`text-base mb-3 font-medium ${activeTheme === key ? 'text-gray-100' : 'text-gray-400'}`}>
-                            {tribe.description}
-                          </p>
-                          <div className={`text-sm ${activeTheme === key ? 'text-gray-200' : 'text-gray-500'}`}>
-                            {key === 'red' && '❄️ Winter Energy • Focus • Determination'}
-                            {key === 'yellow' && '☀️ Summer Energy • Joy • Positivity'}
-                            {key === 'blue' && '🌸 Spring Energy • Peace • Renewal'}
-                          </div>
-                          {activeTheme === key && (
-                            <div className="mt-4 text-white font-bold text-lg animate-pulse">
-                              ✓ SELECTED
-                            </div>
-                          )}
+              {!tribeMember ? (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {Object.entries(themeColors).map(([key, tribe]) => (
+                    <div
+                      key={key}
+                      className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 hover:border-white/50`}
+                      onClick={() => handleTribeJoin(key as 'red' | 'yellow' | 'blue')}
+                    >
+                      <div className="text-center">
+                        <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center shadow-lg`}>
+                          <span className="text-3xl">🪷</span>
                         </div>
+                        <h3 className="text-2xl font-bold mb-3 text-gray-200">
+                          {tribe.name} Lotus
+                        </h3>
+                        <p className="text-base mb-3 font-medium text-gray-400">
+                          {tribe.description}
+                        </p>
+                        <div className="text-sm text-gray-500 mb-4">
+                          {key === 'red' && '❄️ Winter Energy • Focus • Determination'}
+                          {key === 'yellow' && '☀️ Summer Energy • Joy • Positivity'}
+                          {key === 'blue' && '🌸 Spring Energy • Peace • Renewal'}
+                        </div>
+                        <button className={`${tribe.bg} text-white px-6 py-2 rounded-full font-bold hover:opacity-80 transition-all`}>
+                          Join Tribe
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                  
-                  {/* Email Subscription Form */}
-                  <div className="max-w-md mx-auto bg-gray-900 p-6 rounded-lg border border-gray-700">
-                    <h3 className="text-xl font-bold mb-4 text-center">
-                      Join the {themeColors[activeTheme].name} Lotus Tribe
-                    </h3>
-                    <form onSubmit={handleEmailSubscription} className="space-y-4">
-                      <div>
-                        <input
-                          id="tribe-join-email"
-                          name="email"
-                          type="email"
-                          value={tribeEmail}
-                          onChange={(e) => setTribeEmail(e.target.value)}
-                          placeholder="Enter your email to join the tribe"
-                          autoComplete="email"
-                          required
-                          className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:border-white focus:outline-none text-center"
-                        />
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={isSubmittingEmail}
-                        className={`w-full py-3 px-6 rounded-lg font-bold text-white transition-all text-lg ${
-                          isSubmittingEmail 
-                            ? 'bg-gray-600 cursor-not-allowed' 
-                            : `${themeColors[activeTheme].bg} hover:opacity-80 transform hover:scale-105`
-                        }`}
-                      >
-                        {isSubmittingEmail ? '🔄 Joining...' : `🚀 Join ${themeColors[activeTheme].name} Lotus Tribe`}
-                      </button>
-                      
-                      {emailSubmissionStatus === 'success' && (
-                        <div className="text-green-400 text-center font-bold">
-                          ✅ Welcome to the {themeColors[activeTheme].name} Lotus tribe!
-                        </div>
-                      )}
-                      
-                      {emailSubmissionStatus === 'error' && (
-                        <div className="text-red-400 text-center font-bold">
-                          ❌ {emailError || 'Error joining the tribe. Please try again.'}
-                        </div>
-                      )}
-                    </form>
-                  </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
-                <TribeExperience tribe={userTribe} isActive={true} />
+                <div className="space-y-6">
+                  <div className={`inline-block px-8 py-4 ${themeColors[tribeMember.tribe].bg} text-white rounded-full font-bold text-xl`}>
+                    🎵 Welcome to {themeColors[tribeMember.tribe].name} Lotus Tribe! 🎵
+                  </div>
+                  <TribeExperience tribe={tribeMember.tribe} isActive={true} />
+                </div>
               )}
             </div>
           )}
@@ -677,11 +721,24 @@ function App() {
 
           {activeSection === 'community' && (
             <div className="w-full max-w-6xl px-2 md:px-0">
-              <CommunityForum 
-                tribe={userTribe || 'main'} 
-                userEmail={emailSubmissionStatus === 'success' ? tribeEmail : undefined}
-                userName={emailSubmissionStatus === 'success' ? 'Tribe Member' : undefined}
-              />
+              {tribeMember ? (
+                <CommunityForum 
+                  tribe={tribeMember.tribe || 'main'} 
+                  userEmail={tribeMember.email}
+                  userName={tribeMember.name}
+                />
+              ) : (
+                <div className="text-center text-white p-8 bg-black bg-opacity-60 rounded-lg">
+                  <h2 className="text-2xl font-bold mb-4">Join a Tribe to Access Community</h2>
+                  <p className="mb-6">You need to join a tribe first to access the community forum.</p>
+                  <button 
+                    onClick={() => setActiveSection('tribe')}
+                    className="bg-yellow-lotus text-black px-6 py-3 rounded-full font-bold hover:opacity-80 transition-all"
+                  >
+                    Join a Tribe
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -720,6 +777,14 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Tribe Join Modal */}
+        <TribeJoinModal 
+          isOpen={showTribeModal}
+          onClose={() => setShowTribeModal(false)}
+          tribe={selectedTribeForJoin}
+          onJoinSuccess={handleJoinSuccess}
+        />
 
         {/* Tribe Transition Animation */}
         <TribeTransition tribe={tribeTransitionType} isActive={showTribeTransition} />
