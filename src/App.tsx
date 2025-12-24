@@ -72,11 +72,18 @@ function App() {
       
       // Check for existing tribe membership
       const existingMember = localStorage.getItem('currentTribeMember');
+      const allTribesData = localStorage.getItem('tribemembers');
+      
       if (existingMember) {
         const memberData = JSON.parse(existingMember);
         setTribeMember(memberData);
         setUserTribe(memberData.tribe);
         setActiveTheme(memberData.tribe);
+        setSelectedTribeForView(memberData.tribe);
+      }
+      
+      if (allTribesData) {
+        setAllTribes(JSON.parse(allTribesData));
       }
     } catch (error) {
       console.error('Failed to initialize production services:', error);
@@ -114,6 +121,8 @@ function App() {
   const [showTribeModal, setShowTribeModal] = useState(false);
   const [selectedTribeForJoin, setSelectedTribeForJoin] = useState<'red' | 'yellow' | 'blue'>('red');
   const [tribeMember, setTribeMember] = useState<any>(null);
+  const [allTribes, setAllTribes] = useState<any[]>([]);
+  const [selectedTribeForView, setSelectedTribeForView] = useState<'red' | 'yellow' | 'blue'>('red');
   
   // Define theme colors for styling elements
   const themeColors = {
@@ -201,9 +210,45 @@ function App() {
   };
 
   const handleJoinSuccess = (memberData: any) => {
+    // Update all tribes list
+    const existingMembers = JSON.parse(localStorage.getItem('tribemembers') || '[]');
+    const updatedMembers = [...existingMembers];
+    const existingIndex = updatedMembers.findIndex(m => m.tribe === memberData.tribe);
+    
+    if (existingIndex >= 0) {
+      updatedMembers[existingIndex] = memberData;
+    } else {
+      updatedMembers.push(memberData);
+    }
+    
+    localStorage.setItem('tribemembers', JSON.stringify(updatedMembers));
+    setAllTribes(updatedMembers);
+    
+    // Set as current tribe if first one or if switching
     setTribeMember(memberData);
     setUserTribe(memberData.tribe);
     setActiveTheme(memberData.tribe);
+    setSelectedTribeForView(memberData.tribe);
+    localStorage.setItem('currentTribeMember', JSON.stringify(memberData));
+  };
+
+  // Handle tribe switching for viewing
+  const handleTribeSwitch = (tribe: 'red' | 'yellow' | 'blue') => {
+    setSelectedTribeForView(tribe);
+    setActiveTheme(tribe);
+    
+    // Check if user is member of this tribe
+    const memberOfThisTribe = allTribes.find(t => t.tribe === tribe);
+    if (memberOfThisTribe) {
+      setTribeMember(memberOfThisTribe);
+      setUserTribe(tribe);
+      localStorage.setItem('currentTribeMember', JSON.stringify(memberOfThisTribe));
+    }
+  };
+
+  // Check if user is member of specific tribe
+  const isMemberOfTribe = (tribe: 'red' | 'yellow' | 'blue') => {
+    return allTribes.some(t => t.tribe === tribe);
   };
 
   // Debug function to test Firebase connection
@@ -625,43 +670,73 @@ function App() {
               <h2 className="text-3xl md:text-4xl font-bold mb-4 md:mb-6">🌸 Join the Lotus Tribe 🌸</h2>
               <p className="text-lg md:text-xl mb-6 md:mb-8">Choose your tribe and unlock exclusive experiences</p>
               
-              {!tribeMember ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {Object.entries(themeColors).map(([key, tribe]) => (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {Object.entries(themeColors).map(([key, tribe]) => {
+                  const isMember = isMemberOfTribe(key as 'red' | 'yellow' | 'blue');
+                  const isSelected = selectedTribeForView === key;
+                  
+                  return (
                     <div
                       key={key}
-                      className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 hover:border-white/50`}
-                      onClick={() => handleTribeJoin(key as 'red' | 'yellow' | 'blue')}
+                      className={`p-6 rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 ${
+                        isSelected 
+                          ? `${tribe.bg} border-4 border-white shadow-lg transform scale-105` 
+                          : 'bg-gray-800 hover:bg-gray-700 border-2 border-gray-600 hover:border-white/50'
+                      }`}
+                      onClick={() => handleTribeSwitch(key as 'red' | 'yellow' | 'blue')}
                     >
                       <div className="text-center">
                         <div className={`w-20 h-20 mx-auto mb-4 rounded-full ${tribe.bg} flex items-center justify-center shadow-lg`}>
-                          <span className="text-3xl">🪷</span>
+                          <img src={lotusForEachAlbum} alt="Lotus" className="w-12 h-10 filter brightness-0 invert" />
                         </div>
-                        <h3 className="text-2xl font-bold mb-3 text-gray-200">
+                        <h3 className={`text-2xl font-bold mb-3 ${isSelected ? 'text-white' : 'text-gray-200'}`}>
                           {tribe.name} Lotus
                         </h3>
-                        <p className="text-base mb-3 font-medium text-gray-400">
+                        <p className={`text-base mb-3 font-medium ${isSelected ? 'text-gray-100' : 'text-gray-400'}`}>
                           {tribe.description}
                         </p>
-                        <div className="text-sm text-gray-500 mb-4">
+                        <div className={`text-sm mb-4 ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
                           {key === 'red' && '❄️ Winter Energy • Focus • Determination'}
                           {key === 'yellow' && '☀️ Summer Energy • Joy • Positivity'}
                           {key === 'blue' && '🌸 Spring Energy • Peace • Renewal'}
                         </div>
-                        <button className={`${tribe.bg} text-white px-6 py-2 rounded-full font-bold hover:opacity-80 transition-all`}>
-                          Join Tribe
-                        </button>
+                        
+                        {isMember ? (
+                          <div className="space-y-2">
+                            <div className="text-green-400 font-bold text-sm">✓ MEMBER</div>
+                            {isSelected && (
+                              <div className="text-white font-bold text-lg animate-pulse">
+                                ✓ ACTIVE
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTribeJoin(key as 'red' | 'yellow' | 'blue');
+                            }}
+                            className={`${tribe.bg} text-white px-6 py-2 rounded-full font-bold hover:opacity-80 transition-all`}
+                          >
+                            Join Tribe
+                          </button>
+                        )}
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className={`inline-block px-8 py-4 ${themeColors[tribeMember.tribe].bg} text-white rounded-full font-bold text-xl`}>
-                    🎵 Welcome to {themeColors[tribeMember.tribe].name} Lotus Tribe! 🎵
+                  );
+                })}
+              </div>
+              
+              {allTribes.length > 0 && (
+                <div className="mb-6">
+                  <div className={`inline-block px-8 py-4 ${themeColors[selectedTribeForView].bg} text-white rounded-full font-bold text-xl`}>
+                    🎵 {themeColors[selectedTribeForView].name} Lotus Experience Active! 🎵
                   </div>
-                  <TribeExperience tribe={tribeMember.tribe} isActive={true} />
                 </div>
+              )}
+              
+              {tribeMember && selectedTribeForView === tribeMember.tribe && (
+                <TribeExperience tribe={tribeMember.tribe} isActive={true} />
               )}
             </div>
           )}

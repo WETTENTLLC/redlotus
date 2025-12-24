@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import lotusLogo from '../assets/lotus-each-album.png';
 
 interface TribeJoinModalProps {
   isOpen: boolean;
@@ -65,7 +66,7 @@ const TribeJoinModal: React.FC<TribeJoinModalProps> = ({ isOpen, onClose, tribe,
         </div>
 
         <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${tribeInfo[tribe].color} flex items-center justify-center`}>
-          <span className="text-2xl">🪷</span>
+          <img src={lotusLogo} alt="Lotus" className="w-10 h-8 filter brightness-0 invert" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
