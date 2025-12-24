@@ -1,0 +1,17 @@
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[build.environment]
+  VITE_FIREBASE_API_KEY = "AIzaSyD6v_yDbP-Y58jVFpMr0wn4vEdjW77SXjU"
+  VITE_FIREBASE_AUTH_DOMAIN = "red-lotus-cf4b4.firebaseapp.com"
+  VITE_FIREBASE_PROJECT_ID = "red-lotus-cf4b4"
+  VITE_FIREBASE_STORAGE_BUCKET = "red-lotus-cf4b4.firebasestorage.app"
+  VITE_FIREBASE_MESSAGING_SENDER_ID = "211871391956"
+  VITE_FIREBASE_APP_ID = "1:211871391956:web:e701bdecd876d9f0015b41"
+  VITE_PAYPAL_CLIENT_ID = "AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R"
