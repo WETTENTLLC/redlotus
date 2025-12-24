@@ -82,44 +82,30 @@ const EnhancedContentManager: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      // Try Firebase first, fallback to localStorage
-      try {
-        const querySnapshot = await getDocs(collection(db, 'content-posts'));
-        const fetchedPosts = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as ContentPost[];
-        setPosts(fetchedPosts.sort((a, b) => {
-          if (a.isPinned && !b.isPinned) return -1;
-          if (!a.isPinned && b.isPinned) return 1;
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        }));
-      } catch (firebaseError) {
-        console.warn('Firebase unavailable, using local storage:', firebaseError);
-        
-        // Fallback to local storage
-        const localPosts = LocalStorageService.getPostsByType('admin');
-        const formattedPosts: ContentPost[] = localPosts.map(post => ({
-          id: post.id,
-          title: post.title,
-          description: '',
-          content: post.content,
-          type: 'announcement' as any,
-          targetSection: (post.section || 'hut') as any,
-          targetTribe: post.tribe,
-          isActive: post.isActive,
-          isPinned: post.isPinned || false,
-          order: 0,
-          createdAt: post.timestamp,
-          updatedAt: post.timestamp,
-          author: post.author,
-          tags: [],
-          metadata: {}
-        }));
-        setPosts(formattedPosts);
-      }
+      // Use localStorage only - bypass Firebase completely
+      const localPosts = LocalStorageService.getPostsByType('admin');
+      const formattedPosts: ContentPost[] = localPosts.map(post => ({
+        id: post.id,
+        title: post.title,
+        description: '',
+        content: post.content,
+        type: 'announcement' as any,
+        targetSection: (post.section || 'hut') as any,
+        targetTribe: post.tribe,
+        isActive: post.isActive,
+        isPinned: post.isPinned || false,
+        order: 0,
+        createdAt: post.timestamp,
+        updatedAt: post.timestamp,
+        author: post.author,
+        tags: [],
+        metadata: {}
+      }));
+      
+      console.log('📊 Loaded posts from localStorage:', formattedPosts.length);
+      setPosts(formattedPosts);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('❌ Error fetching posts:', error);
     }
   };
 
@@ -134,66 +120,42 @@ const EnhancedContentManager: React.FC = () => {
     setUploading(true);
 
     try {
-      let content = formData.content;
-
-      // Try Firebase first, fallback to localStorage
-      try {
-        if ((formData.type === 'image' || formData.type === 'video' || formData.type === 'behind-scenes') && selectedFile) {
-          content = await uploadFile(selectedFile);
-        }
-
-        const postData: any = {
-          ...formData,
-          content,
-          createdAt: editingPost?.createdAt || new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-
-        if (editingPost) {
-          await updateDoc(doc(db, 'content-posts', editingPost.id), postData);
-        } else {
-          await addDoc(collection(db, 'content-posts'), postData);
-        }
-      } catch (firebaseError) {
-        console.warn('Firebase unavailable, using local storage:', firebaseError);
-        
-        // Fallback to local storage (without file upload for now)
-        if (editingPost) {
-          LocalStorageService.updatePost(editingPost.id, {
-            title: formData.title,
-            content: formData.content,
-            author: formData.author,
-            type: 'admin',
-            section: formData.targetSection,
-            tribe: formData.targetTribe,
-            isActive: formData.isActive,
-            isPinned: formData.isPinned
-          });
-        } else {
-          LocalStorageService.addPost({
-            title: formData.title,
-            content: formData.content,
-            author: formData.author,
-            type: 'admin',
-            section: formData.targetSection,
-            tribe: formData.targetTribe,
-            isActive: formData.isActive,
-            isPinned: formData.isPinned
-          });
-          
-          console.log('Post saved to localStorage:', {
-            section: formData.targetSection,
-            tribe: formData.targetTribe,
-            title: formData.title,
-            isActive: formData.isActive
-          });
-        }
+      // Use localStorage only - bypass Firebase completely
+      if (editingPost) {
+        LocalStorageService.updatePost(editingPost.id, {
+          title: formData.title,
+          content: formData.content,
+          author: formData.author,
+          type: 'admin',
+          section: formData.targetSection,
+          tribe: formData.targetTribe,
+          isActive: formData.isActive,
+          isPinned: formData.isPinned
+        });
+      } else {
+        LocalStorageService.addPost({
+          title: formData.title,
+          content: formData.content,
+          author: formData.author,
+          type: 'admin',
+          section: formData.targetSection,
+          tribe: formData.targetTribe,
+          isActive: formData.isActive,
+          isPinned: formData.isPinned
+        });
       }
+      
+      console.log('✅ Post saved successfully:', {
+        section: formData.targetSection,
+        tribe: formData.targetTribe,
+        title: formData.title,
+        isActive: formData.isActive
+      });
 
       resetForm();
       fetchPosts();
     } catch (error) {
-      console.error('Error saving post:', error);
+      console.error('❌ Error saving post:', error);
     } finally {
       setUploading(false);
     }
@@ -232,7 +194,7 @@ const EnhancedContentManager: React.FC = () => {
   const handleDelete = async (postId: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
       try {
-        await deleteDoc(doc(db, 'content-posts', postId));
+        LocalStorageService.deletePost(postId);
         fetchPosts();
       } catch (error) {
         console.error('Error deleting post:', error);
@@ -242,9 +204,8 @@ const EnhancedContentManager: React.FC = () => {
 
   const toggleActive = async (post: ContentPost) => {
     try {
-      await updateDoc(doc(db, 'content-posts', post.id), {
-        isActive: !post.isActive,
-        updatedAt: new Date().toISOString()
+      LocalStorageService.updatePost(post.id, {
+        isActive: !post.isActive
       });
       fetchPosts();
     } catch (error) {
@@ -254,9 +215,8 @@ const EnhancedContentManager: React.FC = () => {
 
   const togglePin = async (post: ContentPost) => {
     try {
-      await updateDoc(doc(db, 'content-posts', post.id), {
-        isPinned: !post.isPinned,
-        updatedAt: new Date().toISOString()
+      LocalStorageService.updatePost(post.id, {
+        isPinned: !post.isPinned
       });
       fetchPosts();
     } catch (error) {

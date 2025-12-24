@@ -42,38 +42,26 @@ const CommunityForum: React.FC<CommunityForumProps> = ({ tribe, userEmail, userN
     try {
       setIsLoading(true);
       
-      // Try Firebase first, fallback to localStorage
-      try {
-        const fetchedPosts = await CommunityService.getPosts(tribe, selectedCategory);
-        setPosts(fetchedPosts);
-      } catch (firebaseError) {
-        console.warn('Firebase unavailable, using local storage:', firebaseError);
-        
-        // Fallback to local storage
-        const localPosts = LocalStorageService.getCommunityPosts(tribe, selectedCategory);
-        const formattedPosts: ForumPost[] = localPosts.map(post => ({
-          id: post.id,
-          title: post.title,
-          content: post.content,
-          author: post.author,
-          authorEmail: post.authorEmail || '',
-          tribe: post.tribe as any,
-          category: post.category || selectedCategory,
-          timestamp: { toDate: () => new Date(post.timestamp) } as any,
-          replies: 0,
-          likes: 0,
-          isOfficial: false
-        }));
-        setPosts(formattedPosts);
-      }
+      // Use localStorage only - bypass Firebase completely
+      const localPosts = LocalStorageService.getCommunityPosts(tribe, selectedCategory);
+      const formattedPosts: ForumPost[] = localPosts.map(post => ({
+        id: post.id,
+        title: post.title,
+        content: post.content,
+        author: post.author,
+        authorEmail: post.authorEmail || '',
+        tribe: post.tribe as any,
+        category: post.category || selectedCategory,
+        timestamp: { toDate: () => new Date(post.timestamp) } as any,
+        replies: 0,
+        likes: 0,
+        isOfficial: false
+      }));
+      
+      console.log('💬 Loaded community posts:', formattedPosts.length);
+      setPosts(formattedPosts);
     } catch (error) {
       console.error('Error loading posts:', error);
-      MonitoringService.logError({
-        level: 'error',
-        message: 'Failed to load forum posts',
-        url: window.location.href,
-        metadata: { tribe, category: selectedCategory }
-      });
     } finally {
       setIsLoading(false);
     }
@@ -89,40 +77,38 @@ const CommunityForum: React.FC<CommunityForumProps> = ({ tribe, userEmail, userN
     try {
       setIsSubmitting(true);
       
-      // Try Firebase first, fallback to localStorage
-      try {
-        await CommunityService.createPost(
-          newPostTitle,
-          newPostContent,
-          userName,
-          userEmail,
-          tribe,
-          selectedCategory
-        );
-      } catch (firebaseError) {
-        console.warn('Firebase unavailable, using local storage:', firebaseError);
-        
-        // Fallback to local storage
-        LocalStorageService.addPost({
-          title: newPostTitle,
-          content: newPostContent,
-          author: userName,
-          authorEmail: userEmail,
-          type: 'community',
-          tribe: tribe === 'main' ? 'all' : tribe,
-          category: selectedCategory,
-          isActive: true
-        });
-      }
+      // Use localStorage only - bypass Firebase completely
+      LocalStorageService.addPost({
+        title: newPostTitle,
+        content: newPostContent,
+        author: userName,
+        authorEmail: userEmail,
+        type: 'community',
+        tribe: tribe === 'main' ? 'all' : tribe,
+        category: selectedCategory,
+        isActive: false // Requires admin approval
+      });
+      
+      console.log('✅ Community post submitted for approval:', {
+        title: newPostTitle,
+        tribe,
+        category: selectedCategory,
+        status: 'pending approval'
+      });
       
       setNewPostTitle('');
       setNewPostContent('');
       setShowNewPost(false);
+      
+      // Show success message
+      alert('Post submitted successfully! It will appear after admin approval.');
+      
       loadPosts();
       
       MonitoringService.trackUserAction('forum_post_created', 'community', `${tribe}_${selectedCategory}`);
     } catch (error) {
-      alert((error as Error).message);
+      console.error('❌ Error creating post:', error);
+      alert('Error creating post. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

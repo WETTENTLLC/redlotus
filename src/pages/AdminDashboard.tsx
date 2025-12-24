@@ -10,10 +10,11 @@ import { auth } from '../firebase/config';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { LocalStorageService } from '../services/LocalStorageService';
 import lotusLogo from '../assets/lotus-each-album.png';
 
 const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'enhanced-content' | 'media' | 'store' | 'content' | 'messages' | 'quotes' | 'fanart' | 'bookings' | 'analytics'>('enhanced-content');
+  const [activeTab, setActiveTab] = useState<'enhanced-content' | 'media' | 'store' | 'content' | 'messages' | 'quotes' | 'fanart' | 'bookings' | 'analytics' | 'community-posts'>('enhanced-content');
   const [user, loading, error] = useAuthState(auth);
   const [uploadedSongs, setUploadedSongs] = useState<any[]>([]);
   const [pendingFanArt, setPendingFanArt] = useState<any[]>([]);
@@ -174,6 +175,12 @@ const AdminDashboard: React.FC = () => {
               ✨ Vibe Quotes
             </button>
             <button 
+              className={`py-4 px-6 text-center flex-grow ${activeTab === 'community-posts' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('community-posts')}
+            >
+              👥 Community Posts
+            </button>
+            <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'analytics' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('analytics')}
             >
@@ -189,6 +196,98 @@ const AdminDashboard: React.FC = () => {
             {activeTab === 'content' && <ContentManager />}
             
             {activeTab === 'bookings' && <BookingManager />}
+            
+            {activeTab === 'community-posts' && (
+              <div className="space-y-6">
+                <h3 className="text-2xl font-bold text-red-lotus">👥 Community Posts Approval</h3>
+                {(() => {
+                  const pendingPosts = LocalStorageService.getAllPosts().filter(post => 
+                    post.type === 'community' && !post.isActive
+                  );
+                  const approvedPosts = LocalStorageService.getAllPosts().filter(post => 
+                    post.type === 'community' && post.isActive
+                  );
+                  
+                  return (
+                    <div className="space-y-6">
+                      {/* Pending Posts */}
+                      <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <h4 className="text-lg font-bold text-yellow-800 mb-4">⏳ Pending Approval ({pendingPosts.length})</h4>
+                        {pendingPosts.length === 0 ? (
+                          <p className="text-yellow-600">No posts pending approval.</p>
+                        ) : (
+                          <div className="space-y-3">
+                            {pendingPosts.map(post => (
+                              <div key={post.id} className="bg-white p-4 rounded border">
+                                <div className="flex justify-between items-start mb-2">
+                                  <h5 className="font-bold text-lg">{post.title}</h5>
+                                  <div className="flex gap-2">
+                                    <button
+                                      onClick={() => {
+                                        LocalStorageService.updatePost(post.id, { isActive: true });
+                                        window.location.reload();
+                                      }}
+                                      className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
+                                    >
+                                      ✅ Approve
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        if (confirm('Delete this post?')) {
+                                          LocalStorageService.deletePost(post.id);
+                                          window.location.reload();
+                                        }
+                                      }}
+                                      className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
+                                    >
+                                      ❌ Reject
+                                    </button>
+                                  </div>
+                                </div>
+                                <p className="text-gray-700 mb-2">{post.content}</p>
+                                <div className="text-sm text-gray-500">
+                                  By {post.author} • {post.tribe} tribe • {post.category} • {new Date(post.timestamp).toLocaleDateString()}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Approved Posts */}
+                      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                        <h4 className="text-lg font-bold text-green-800 mb-4">✅ Approved Posts ({approvedPosts.length})</h4>
+                        {approvedPosts.length === 0 ? (
+                          <p className="text-green-600">No approved community posts yet.</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {approvedPosts.slice(0, 10).map(post => (
+                              <div key={post.id} className="bg-white p-3 rounded border flex justify-between items-center">
+                                <div>
+                                  <span className="font-medium">{post.title}</span>
+                                  <span className="text-gray-500 ml-2">by {post.author}</span>
+                                </div>
+                                <button
+                                  onClick={() => {
+                                    if (confirm('Hide this post?')) {
+                                      LocalStorageService.updatePost(post.id, { isActive: false });
+                                      window.location.reload();
+                                    }
+                                  }}
+                                  className="bg-orange-500 text-white px-2 py-1 rounded text-xs hover:bg-orange-600"
+                                >
+                                  Hide
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
             
             {activeTab === 'analytics' && (
               <div className="space-y-6">
