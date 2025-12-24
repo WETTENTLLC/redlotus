@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase/config';
+import { LocalStorageService } from '../../services/LocalStorageService';
 import lotusLogo from '../../assets/lotus-each-album.png';
 
 interface ContentPost {
@@ -81,16 +82,42 @@ const EnhancedContentManager: React.FC = () => {
 
   const fetchPosts = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, 'content-posts'));
-      const fetchedPosts = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as ContentPost[];
-      setPosts(fetchedPosts.sort((a, b) => {
-        if (a.isPinned && !b.isPinned) return -1;
-        if (!a.isPinned && b.isPinned) return 1;
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }));
+      // Try Firebase first, fallback to localStorage
+      try {
+        const querySnapshot = await getDocs(collection(db, 'content-posts'));
+        const fetchedPosts = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as ContentPost[];
+        setPosts(fetchedPosts.sort((a, b) => {
+          if (a.isPinned && !b.isPinned) return -1;
+          if (!a.isPinned && b.isPinned) return 1;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        }));
+      } catch (firebaseError) {
+        console.warn('Firebase unavailable, using local storage:', firebaseError);
+        
+        // Fallback to local storage
+        const localPosts = LocalStorageService.getPostsByType('admin');
+        const formattedPosts: ContentPost[] = localPosts.map(post => ({
+          id: post.id,
+          title: post.title,
+          description: '',
+          content: post.content,
+          type: 'announcement' as any,
+          targetSection: (post.section || 'hut') as any,
+          targetTribe: post.tribe,
+          isActive: post.isActive,
+          isPinned: post.isPinned || false,
+          order: 0,
+          createdAt: post.timestamp,
+          updatedAt: post.timestamp,
+          author: post.author,
+          tags: [],
+          metadata: {}
+        }));
+        setPosts(formattedPosts);
+      }
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -109,21 +136,51 @@ const EnhancedContentManager: React.FC = () => {
     try {
       let content = formData.content;
 
-      if ((formData.type === 'image' || formData.type === 'video' || formData.type === 'behind-scenes') && selectedFile) {
-        content = await uploadFile(selectedFile);
-      }
+      // Try Firebase first, fallback to localStorage
+      try {
+        if ((formData.type === 'image' || formData.type === 'video' || formData.type === 'behind-scenes') && selectedFile) {
+          content = await uploadFile(selectedFile);
+        }
 
-      const postData: any = {
-        ...formData,
-        content,
-        createdAt: editingPost?.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const postData: any = {
+          ...formData,
+          content,
+          createdAt: editingPost?.createdAt || new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
 
-      if (editingPost) {
-        await updateDoc(doc(db, 'content-posts', editingPost.id), postData);
-      } else {
-        await addDoc(collection(db, 'content-posts'), postData);
+        if (editingPost) {
+          await updateDoc(doc(db, 'content-posts', editingPost.id), postData);
+        } else {
+          await addDoc(collection(db, 'content-posts'), postData);
+        }
+      } catch (firebaseError) {
+        console.warn('Firebase unavailable, using local storage:', firebaseError);
+        
+        // Fallback to local storage (without file upload for now)
+        if (editingPost) {
+          LocalStorageService.updatePost(editingPost.id, {
+            title: formData.title,
+            content: formData.content,
+            author: formData.author,
+            type: 'admin',
+            section: formData.targetSection,
+            tribe: formData.targetTribe,
+            isActive: formData.isActive,
+            isPinned: formData.isPinned
+          });
+        } else {
+          LocalStorageService.addPost({
+            title: formData.title,
+            content: formData.content,
+            author: formData.author,
+            type: 'admin',
+            section: formData.targetSection,
+            tribe: formData.targetTribe,
+            isActive: formData.isActive,
+            isPinned: formData.isPinned
+          });
+        }
       }
 
       resetForm();

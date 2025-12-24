@@ -20,6 +20,7 @@ import SimpleTribeActivation from './components/SimpleTribeActivation';
 import CommunityForum from './features/community/CommunityForum';
 import { testFirebaseConnection, validateEnvironmentVariables } from './utils/firebaseTest';
 import TribeJoinModal from './components/TribeJoinModal';
+import ContentDisplay from './components/ContentDisplay';
 
 // Import images
 import lotusForEachAlbum from './assets/lotus-each-album.png';
@@ -570,6 +571,7 @@ function App() {
         <main className="flex-grow flex items-center justify-center px-4 py-8">
           {activeSection === 'hut' && (
             <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full">
+              <ContentDisplay section="hut" tribe={selectedTribeForView} maxPosts={3} />
               <h2 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6">Red Lotus</h2>
               <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center mb-6 md:mb-8">
                 <button 
@@ -622,6 +624,7 @@ function App() {
 
           {activeSection === 'music' && (
             <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full">
+              <ContentDisplay section="music" tribe={selectedTribeForView} maxPosts={2} />
               <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">{themeColors[activeTheme].name} Lotus Albums</h2>
               <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-center">
                 <img 

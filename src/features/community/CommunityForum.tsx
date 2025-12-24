@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CommunityService, ForumPost } from './CommunityService';
 import { MonitoringService } from '../../monitoring/MonitoringService';
+import { LocalStorageService } from '../../services/LocalStorageService';
 
 interface CommunityForumProps {
   tribe: 'red' | 'yellow' | 'blue' | 'main';
@@ -40,8 +41,31 @@ const CommunityForum: React.FC<CommunityForumProps> = ({ tribe, userEmail, userN
   const loadPosts = async () => {
     try {
       setIsLoading(true);
-      const fetchedPosts = await CommunityService.getPosts(tribe, selectedCategory);
-      setPosts(fetchedPosts);
+      
+      // Try Firebase first, fallback to localStorage
+      try {
+        const fetchedPosts = await CommunityService.getPosts(tribe, selectedCategory);
+        setPosts(fetchedPosts);
+      } catch (firebaseError) {
+        console.warn('Firebase unavailable, using local storage:', firebaseError);
+        
+        // Fallback to local storage
+        const localPosts = LocalStorageService.getCommunityPosts(tribe, selectedCategory);
+        const formattedPosts: ForumPost[] = localPosts.map(post => ({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          author: post.author,
+          authorEmail: post.authorEmail || '',
+          tribe: post.tribe as any,
+          category: post.category || selectedCategory,
+          timestamp: { toDate: () => new Date(post.timestamp) } as any,
+          replies: 0,
+          likes: 0,
+          isOfficial: false
+        }));
+        setPosts(formattedPosts);
+      }
     } catch (error) {
       console.error('Error loading posts:', error);
       MonitoringService.logError({
@@ -64,14 +88,32 @@ const CommunityForum: React.FC<CommunityForumProps> = ({ tribe, userEmail, userN
 
     try {
       setIsSubmitting(true);
-      await CommunityService.createPost(
-        newPostTitle,
-        newPostContent,
-        userName,
-        userEmail,
-        tribe,
-        selectedCategory
-      );
+      
+      // Try Firebase first, fallback to localStorage
+      try {
+        await CommunityService.createPost(
+          newPostTitle,
+          newPostContent,
+          userName,
+          userEmail,
+          tribe,
+          selectedCategory
+        );
+      } catch (firebaseError) {
+        console.warn('Firebase unavailable, using local storage:', firebaseError);
+        
+        // Fallback to local storage
+        LocalStorageService.addPost({
+          title: newPostTitle,
+          content: newPostContent,
+          author: userName,
+          authorEmail: userEmail,
+          type: 'community',
+          tribe: tribe === 'main' ? 'all' : tribe,
+          category: selectedCategory,
+          isActive: true
+        });
+      }
       
       setNewPostTitle('');
       setNewPostContent('');
