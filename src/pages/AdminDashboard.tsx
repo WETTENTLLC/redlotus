@@ -111,7 +111,10 @@ const AdminDashboard: React.FC = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12" />
-              <h1 className="text-2xl font-bold">Red Lotus Admin</h1>
+              <div>
+                <h1 className="text-2xl font-bold">Red Lotus Admin</h1>
+                <div className="text-sm opacity-90">🔴 LIVE - Production Dashboard</div>
+              </div>
             </div>
             <button 
               onClick={() => auth.signOut()}

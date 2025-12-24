@@ -92,8 +92,7 @@ const CommunityForum: React.FC<CommunityForumProps> = ({ tribe, userEmail, userN
       console.log('✅ Community post submitted for approval:', {
         title: newPostTitle,
         tribe,
-        category: selectedCategory,
-        status: 'pending approval'
+        category: selectedCategory
       });
       
       setNewPostTitle('');

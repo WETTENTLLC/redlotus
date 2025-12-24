@@ -48,19 +48,6 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({ section, tribe = 'all',
   }, [section, tribe, maxPosts]);
 
   if (posts.length === 0) {
-    // Debug: Show what's in localStorage for this section
-    const allPosts = LocalStorageService.getAllPosts();
-    const sectionPosts = LocalStorageService.getPostsBySection(section);
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`ContentDisplay Debug for section "${section}":`, {
-        allPosts: allPosts.length,
-        sectionPosts: sectionPosts.length,
-        tribe,
-        posts: sectionPosts
-      });
-    }
-    
     return null;
   }
 

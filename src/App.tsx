@@ -393,7 +393,10 @@ function App() {
       >
         <header className="flex flex-col items-center py-4 relative">
           <div className="w-full flex justify-between items-center px-4 md:px-6">
-            <h1 className="text-xl md:text-2xl font-bold text-white">RED LOTUS</h1>
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold text-white">RED LOTUS</h1>
+              <div className="text-xs text-green-400">🔴 LIVE</div>
+            </div>
             
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex gap-3 xl:gap-6 text-sm xl:text-xl font-bold text-white">
@@ -593,31 +596,10 @@ function App() {
               <div className="mt-8 md:mt-12">
                 <button 
                   onClick={() => setShowAdminLogin(true)} 
-                  className="text-white opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4 mr-4"
+                  className="text-white opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4"
                 >
                   Artist Admin
                 </button>
-                {EnvironmentService.isDevelopment() && (
-                  <>
-                    <button 
-                      onClick={() => window.location.href = '/production-test'} 
-                      className="text-yellow-400 opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4 mr-4"
-                    >
-                      Production Test
-                    </button>
-                    <button 
-                      onClick={testFirebase} 
-                      className="text-green-400 opacity-70 hover:opacity-100 transition touch-manipulation py-2 px-4"
-                    >
-                      Test Firebase
-                    </button>
-                    {debugInfo && (
-                      <div className="mt-4 p-2 bg-black bg-opacity-50 rounded text-sm text-white">
-                        {debugInfo}
-                      </div>
-                    )}
-                  </>
-                )}
               </div>
             </div>
           )}
@@ -766,31 +748,18 @@ function App() {
 
           {activeSection === 'live' && (
             <div className="text-center text-white p-4 md:p-8 bg-black bg-opacity-60 rounded-lg max-w-4xl w-full">
-              <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Live Shows</h2>
-              <p className="text-lg md:text-xl mb-4 md:mb-6">Upcoming performances and virtual events</p>
+              <ContentDisplay section="live" tribe={selectedTribeForView} maxPosts={2} />
+              <h2 className="text-2xl md:text-4xl font-bold mb-4 md:mb-6">Red Lotus LIVE</h2>
+              <p className="text-lg md:text-xl mb-4 md:mb-6">Experience live performances and virtual events</p>
               <div className="space-y-4">
-                <div className="p-4 bg-black bg-opacity-50 rounded-lg flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
-                  <div className="text-center md:text-left">
-                    <h3 className="text-lg md:text-xl font-bold">Virtual Concert Experience</h3>
-                    <p className="text-sm md:text-base">July 15, 2025 - 8:00 PM</p>
-                  </div>
+                <div className="p-4 bg-black bg-opacity-50 rounded-lg text-center">
+                  <h3 className="text-lg md:text-xl font-bold mb-2">Live Shows Coming Soon</h3>
+                  <p className="text-sm md:text-base mb-3">Stay tuned for upcoming live performances and virtual concert experiences.</p>
                   <button 
                     className="bg-red-lotus text-white px-4 py-2 rounded-full hover:bg-opacity-80 transition touch-manipulation"
-                    onClick={() => MonitoringService.trackUserAction('ticket_click', 'live', 'virtual_concert')}
+                    onClick={() => MonitoringService.trackUserAction('notify_click', 'live', 'upcoming_shows')}
                   >
-                    Get Tickets
-                  </button>
-                </div>
-                <div className="p-4 bg-black bg-opacity-50 rounded-lg flex flex-col md:flex-row justify-between items-center gap-3 md:gap-0">
-                  <div className="text-center md:text-left">
-                    <h3 className="text-lg md:text-xl font-bold">Exclusive Streaming Night</h3>
-                    <p className="text-sm md:text-base">August 18, 2025 - 7:30 PM</p>
-                  </div>
-                  <button 
-                    className="bg-red-lotus text-white px-4 py-2 rounded-full hover:bg-opacity-80 transition touch-manipulation"
-                    onClick={() => MonitoringService.trackUserAction('ticket_click', 'live', 'streaming_night')}
-                  >
-                    Get Tickets
+                    Get Notified
                   </button>
                 </div>
               </div>

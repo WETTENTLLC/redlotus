@@ -21,12 +21,9 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Merchandise items for the concession stand
+  // Merchandise items for the concession stand - will be populated from admin
   const [liveMerch, setLiveMerch] = useState([
-    { id: 'm1', name: 'Red Lotus T-Shirt', price: 25 },
-    { id: 'm2', name: 'Digital Album Download', price: 12 },
-    { id: 'm3', name: 'Concert Poster', price: 15 },
-    { id: 'm4', name: 'VIP Meet & Greet Add-on', price: 50 },
+    // Merchandise will be added through admin dashboard
   ]);
   const [selectedMerch, setSelectedMerch] = useState<string[]>([]);
 
@@ -217,9 +214,9 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
         
         <div className="w-full flex flex-col items-center mb-6">
           <div className="w-full bg-gradient-to-r from-red-lotus via-yellow-lotus to-blue-lotus rounded-lg p-4 shadow-lg">
-            <h3 className="text-2xl font-bold mb-2 text-black">Upcoming Shows</h3>
+            <h3 className="text-2xl font-bold mb-2 text-black">Live Shows</h3>
             {liveShows.length === 0 ? (
-              <p className="text-center py-4 text-white bg-black/50 rounded">No upcoming shows at this time.</p>
+              <p className="text-center py-4 text-white bg-black/50 rounded">No live shows scheduled at this time. Check back soon for upcoming performances!</p>
             ) : (
               <ul className="space-y-2">
                 {liveShows.map(show => (
