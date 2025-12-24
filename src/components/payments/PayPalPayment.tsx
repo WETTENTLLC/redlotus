@@ -48,12 +48,6 @@ const PayPalPayment: React.FC<PayPalPaymentProps> = ({
       </div>
     );
   }
-  const initialOptions = {
-    clientId: paypalClientId,
-    currency: "USD",
-    intent: "capture",
-  };
-
   const createOrder = (data: any, actions: any) => {
     // Additional security check before creating order
     if (!SecurityService.validatePaymentAmount(amount)) {
