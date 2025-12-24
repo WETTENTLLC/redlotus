@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Red Lotus - Loading Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #000; 
+            color: #fff; 
+            text-align: center; 
+            padding: 50px; 
+        }
+        .loading { color: #C17505; font-size: 24px; }
+    </style>
+</head>
+<body>
+    <h1>Red Lotus</h1>
+    <div class="loading">Site Loading...</div>
+    <p>If you see this, the deployment is working.</p>
+    <script>
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 3000);
+    </script>
+</body>
+</html>
