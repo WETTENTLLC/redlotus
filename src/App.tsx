@@ -20,7 +20,8 @@ import TribeJoinModal from './components/TribeJoinModal';
 import ContentDisplay from './components/ContentDisplay';
 import MinimalAppWrapper from './components/MinimalAppWrapper';
 import ProductCard from './components/ProductCard';
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider, Helmet } from 'react-helmet-async';
+import AEOHead from './components/AEOHead';
 
 // Import images
 import redLotusAlbumRap from './assets/red-lotus-album-rap.jpeg';
@@ -137,6 +138,26 @@ function App() {
 
   return (
     <HelmetProvider>
+      <Helmet>
+        {/* Global Organization Schema */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'MusicGroup',
+            'name': 'Red Lotus',
+            'url': 'https://redlotusofficial.com',
+            'description': 'Red Lotus is a revolutionary music collective featuring three distinct tribes: Red (Winter/Rap energy), Yellow (Summer/Pop energy), and Blue (Spring/R&B renewal).',
+            'foundingDate': '2024',
+            'sameAs': [
+              'https://twitter.com/redlotusmusic',
+              'https://instagram.com/redlotusmusic',
+              'https://tiktok.com/@redlotusmusic',
+              'https://soundcloud.com/redlotusmusic'
+            ],
+            'genre': ['Hip-Hop', 'Pop', 'R&B']
+          })}
+        </script>
+      </Helmet>
       <ErrorBoundary>
         <Routes>
           {/* Admin Routes */}
@@ -156,61 +177,77 @@ function App() {
               >
                 {/* Home Section */}
                 {activeSection === 'hut' && (
-                  <section className="section text-center">
-                    <h1 className="section-title">Red Lotus</h1>
-                    <p className="section-subtitle">
-                      Experience music through the seasons of life
-                    </p>
-                    <div className="mt-xl">
-                      <p style={{ color: '#666' }} className="mb-lg">
-                        Join our global community and discover unique musical experiences across multiple dimensions.
+                  <>
+                    <AEOHead
+                      title="Home"
+                      description="Red Lotus - A revolutionary music collective featuring three distinct tribes: Red (Winter/Rap energy), Yellow (Summer/Pop energy), and Blue (Spring/R&B renewal). Explore albums, join the tribe, and experience exclusive content."
+                      keywords="music, artist, collective, tribes, rap, pop, r&b, streaming, Red Lotus"
+                      type="website"
+                    />
+                    <section className="section text-center">
+                      <h1 className="section-title">Red Lotus</h1>
+                      <p className="section-subtitle">
+                        Experience music through the seasons of life
                       </p>
-                      <div className="flex gap-lg justify-center flex-wrap">
-                        <button className="btn" onClick={() => setActiveSection('music')}>
-                          Explore Music
-                        </button>
-                        <button className="btn btn-secondary" onClick={() => setActiveSection('tribe')}>
-                          Join Tribe
+                      <div className="mt-xl">
+                        <p style={{ color: '#666' }} className="mb-lg">
+                          Join our global community and discover unique musical experiences across multiple dimensions.
+                        </p>
+                        <div className="flex gap-lg justify-center flex-wrap">
+                          <button className="btn" onClick={() => setActiveSection('music')}>
+                            Explore Music
+                          </button>
+                          <button className="btn btn-secondary" onClick={() => setActiveSection('tribe')}>
+                            Join Tribe
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-2xl">
+                        <button
+                          onClick={() => setShowAdminLogin(true)}
+                          style={{ fontSize: '12px', opacity: 0.6, cursor: 'pointer', background: 'none', border: 'none', padding: '8px' }}
+                        >
+                          Artist Admin
                         </button>
                       </div>
-                    </div>
-                    <div className="mt-2xl">
-                      <button
-                        onClick={() => setShowAdminLogin(true)}
-                        style={{ fontSize: '12px', opacity: 0.6, cursor: 'pointer', background: 'none', border: 'none', padding: '8px' }}
-                      >
-                        Artist Admin
-                      </button>
-                    </div>
-                  </section>
+                    </section>
+                  </>
                 )}
 
                 {/* Music Section */}
                 {activeSection === 'music' && (
-                  <section className="section">
-                    <h1 className="section-title">Music Collection</h1>
-                    <p className="section-subtitle">Curated albums from the Red Lotus universe</p>
+                  <>
+                    <AEOHead
+                      title="Music Collection"
+                      description="Explore Red Lotus music collection. Curated albums from the Red Lotus universe featuring three distinct tribes: Red (Winter/Rap), Yellow (Summer/Pop), and Blue (Spring/R&B)."
+                      keywords="music collection, albums, streaming, rap, pop, r&b, Red Lotus"
+                      type="music.playlist"
+                    />
+                    <section className="section">
+                      <h1 className="section-title">Music Collection</h1>
+                      <p className="section-subtitle">Curated albums from the Red Lotus universe</p>
 
-                    <div className="products-grid mt-2xl">
-                      {Object.entries(tribeColors).map(([key, tribe]) => {
-                        const tribeKey = key as 'red' | 'yellow' | 'blue';
-                        return (
-                          <div key={key}>
-                            <ProductCard
-                              title={`${tribe.name} Lotus Album`}
-                              description={tribe.description}
-                              image={tribe.album}
-                              accentColor={tribeKey}
-                            >
-                              <button className="btn" style={{ width: '100%', marginTop: '12px' }}>
-                                Stream Now
-                              </button>
-                            </ProductCard>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </section>
+                      <div className="products-grid mt-2xl">
+                        {Object.entries(tribeColors).map(([key, tribe]) => {
+                          const tribeKey = key as 'red' | 'yellow' | 'blue';
+                          return (
+                            <div key={key}>
+                              <ProductCard
+                                title={`${tribe.name} Lotus Album`}
+                                description={tribe.description}
+                                image={tribe.album}
+                                accentColor={tribeKey}
+                              >
+                                <button className="btn" style={{ width: '100%', marginTop: '12px' }}>
+                                  Stream Now
+                                </button>
+                              </ProductCard>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </section>
+                  </>
                 )}
 
                 {/* Vibrate Section */}
@@ -243,24 +280,31 @@ function App() {
 
                 {/* Tribe Section */}
                 {activeSection === 'tribe' && (
-                  <section className="section">
-                    <h1 className="section-title">Join The Tribe</h1>
-                    <p className="section-subtitle">Choose your tribe and unlock exclusive experiences</p>
+                  <>
+                    <AEOHead
+                      title="Join The Tribe"
+                      description="Join Red Lotus tribes and unlock exclusive experiences. Choose from Red Lotus (Winter/Rap), Yellow Lotus (Summer/Pop), or Blue Lotus (Spring/R&B). Each tribe offers unique member benefits and community engagement."
+                      keywords="tribes, membership, community, exclusive content, music collective"
+                      type="website"
+                    />
+                    <section className="section">
+                      <h1 className="section-title">Join The Tribe</h1>
+                      <p className="section-subtitle">Choose your tribe and unlock exclusive experiences</p>
 
-                    <div className="three-column-grid mt-2xl">
-                      {Object.entries(tribeColors).map(([key, tribe]) => {
-                        const isMember = isMemberOfTribe(key as 'red' | 'yellow' | 'blue');
-                        const tribeKey = key as 'red' | 'yellow' | 'blue';
+                      <div className="three-column-grid mt-2xl">
+                        {Object.entries(tribeColors).map(([key, tribe]) => {
+                          const isMember = isMemberOfTribe(key as 'red' | 'yellow' | 'blue');
+                          const tribeKey = key as 'red' | 'yellow' | 'blue';
 
-                        return (
-                          <div key={key}>
-                            <ProductCard
-                              title={`${tribe.name} Lotus Tribe`}
-                              description={tribe.description}
-                              image={tribe.image}
-                              accentColor={tribeKey}
-                            >
-                            <button
+                          return (
+                            <div key={key}>
+                              <ProductCard
+                                title={`${tribe.name} Lotus Tribe`}
+                                description={tribe.description}
+                                image={tribe.image}
+                                accentColor={tribeKey}
+                              >
+                              <button
                               className={isMember ? 'btn' : 'btn btn-secondary'}
                               onClick={() =>
                                 isMember
@@ -271,12 +315,13 @@ function App() {
                             >
                               {isMember ? 'Switch Tribe' : 'Join Tribe'}
                             </button>
-                          </ProductCard>
+                              </ProductCard>
                           </div>
                         );
                       })}
                     </div>
-                  </section>
+                    </section>
+                  </>
                 )}
 
                 {/* Behind The Scenes */}
@@ -301,56 +346,95 @@ function App() {
 
                 {/* Store */}
                 {activeSection === 'store' && (
-                  <section className="section">
-                    <h1 className="section-title">Red Lotus Store</h1>
-                    <p className="section-subtitle">Official merchandise and exclusive items</p>
-                    <div className="mt-2xl">
-                      <StoreFront />
-                    </div>
-                  </section>
+                  <>
+                    <AEOHead
+                      title="Red Lotus Store"
+                      description="Shop official Red Lotus merchandise, music, and exclusive items. Browse our curated collection of albums, merchandise, digital content, and event tickets."
+                      keywords="store, merchandise, music, shop, e-commerce, Red Lotus"
+                      type="website"
+                    />
+                    <section className="section">
+                      <h1 className="section-title">Red Lotus Store</h1>
+                      <p className="section-subtitle">Official merchandise and exclusive items</p>
+                      <div className="mt-2xl">
+                        <StoreFront />
+                      </div>
+                    </section>
+                  </>
                 )}
 
                 {/* Live Shows */}
                 {activeSection === 'live' && (
-                  <section className="section">
-                    <h1 className="section-title">Red Lotus LIVE</h1>
-                    <p className="section-subtitle">Experience live performances and virtual events</p>
+                  <>
+                    <AEOHead
+                      title="Live Shows"
+                      description="Experience Red Lotus live performances and virtual events. Stay updated on upcoming concerts, tour dates, and exclusive live experiences."
+                      keywords="live shows, concerts, tour dates, events, performances"
+                      type="website"
+                    />
+                    <section className="section">
+                      <h1 className="section-title">Red Lotus LIVE</h1>
+                      <p className="section-subtitle">Experience live performances and virtual events</p>
 
-                    <div className="mt-2xl" style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '8px', textAlign: 'center' }}>
-                      <h3 style={{ fontSize: '20px', marginBottom: '12px', fontWeight: '600' }}>Live Shows Coming Soon</h3>
-                      <p style={{ color: '#666', marginBottom: '24px' }}>
-                        Stay tuned for upcoming live performances and virtual concert experiences.
-                      </p>
-                      <button className="btn">Get Notified</button>
-                    </div>
-                  </section>
+                      <div className="mt-2xl" style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '8px', textAlign: 'center' }}>
+                        <h3 style={{ fontSize: '20px', marginBottom: '12px', fontWeight: '600' }}>Live Shows Coming Soon</h3>
+                        <p style={{ color: '#666', marginBottom: '24px' }}>
+                          Stay tuned for upcoming live performances and virtual concert experiences.
+                        </p>
+                        <button className="btn">Get Notified</button>
+                      </div>
+                    </section>
+                  </>
                 )}
 
                 {/* Fan Art */}
                 {activeSection === 'fanart' && (
-                  <section className="section">
-                    <FanArtPage />
-                  </section>
+                  <>
+                    <AEOHead
+                      title="Fan Art Gallery"
+                      description="Explore Red Lotus fan art gallery. Submit your original artwork inspired by Red Lotus music and get featured in our community gallery."
+                      keywords="fan art, gallery, submissions, community art, user generated content"
+                      type="website"
+                    />
+                    <section className="section">
+                      <FanArtPage />
+                    </section>
+                  </>
                 )}
 
                 {/* Booking */}
                 {activeSection === 'booking' && (
-                  <section className="section">
-                    <OfferBasedBookingPage />
-                  </section>
+                  <>
+                    <AEOHead
+                      title="Booking & Consultation"
+                      description="Book Red Lotus for features, collaborations, production services, and appearances. Request professional consultation and partnership opportunities with Red Lotus music collective."
+                      keywords="booking, consultation, collaboration, features, production services"
+                      type="website"
+                    />
+                    <section className="section">
+                      <OfferBasedBookingPage />
+                    </section>
+                  </>
                 )}
 
                 {/* Community */}
                 {activeSection === 'community' && (
-                  <section className="section">
-                    {tribeMember ? (
-                      <CommunityForum
-                        tribe={tribeMember.tribe || 'main'}
-                        userEmail={tribeMember.email}
-                        userName={tribeMember.name}
-                      />
-                    ) : (
-                      <div style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '8px', textAlign: 'center' }}>
+                  <>
+                    <AEOHead
+                      title="Community Forum"
+                      description="Join the Red Lotus community forum. Connect with other fans, discuss music, share ideas, and engage with the Red Lotus collective."
+                      keywords="community, forum, discussion, fans, social, engagement"
+                      type="website"
+                    />
+                    <section className="section">
+                      {tribeMember ? (
+                        <CommunityForum
+                          tribe={tribeMember.tribe || 'main'}
+                          userEmail={tribeMember.email}
+                          userName={tribeMember.name}
+                        />
+                      ) : (
+                        <div style={{ backgroundColor: '#fff', padding: '32px', borderRadius: '8px', textAlign: 'center' }}>
                         <h2 style={{ fontSize: '28px', marginBottom: '16px', fontWeight: '600' }}>Join a Tribe to Access Community</h2>
                         <p style={{ color: '#666', marginBottom: '24px' }}>
                           You need to join a tribe first to access the community forum.
@@ -360,7 +444,8 @@ function App() {
                         </button>
                       </div>
                     )}
-                  </section>
+                    </section>
+                  </>
                 )}
 
                 {/* Admin Login Modal */}
