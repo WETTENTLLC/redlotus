@@ -9,6 +9,12 @@ interface LiveShowsPageProps {
   isAdmin?: boolean;
 }
 
+interface MerchandiseItem {
+  id: string;
+  name: string;
+  price: number;
+}
+
 const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
   const [liveShows, setLiveShows] = useState<LiveShow[]>([]);
   const [selectedShow, setSelectedShow] = useState<LiveShow | null>(null);
@@ -22,7 +28,7 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
   const [error, setError] = useState<string | null>(null);
 
   // Merchandise items for the concession stand - will be populated from admin
-  const [liveMerch, setLiveMerch] = useState([
+  const [liveMerch, setLiveMerch] = useState<MerchandiseItem[]>([
     // Merchandise will be added through admin dashboard
   ]);
   const [selectedMerch, setSelectedMerch] = useState<string[]>([]);
@@ -177,7 +183,7 @@ const LiveShowsPage: React.FC<LiveShowsPageProps> = ({ isAdmin = false }) => {
               <div className="flex-1">
                 <select 
                   className="w-full px-4 py-2 rounded bg-gray-800 text-white"
-                  value={selectedShow?.id ?? ''}
+                  value={selectedShow ? selectedShow.id : ''}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                     const show = liveShows.find(s => s.id === e.target.value);
                     setSelectedShow(show || null);

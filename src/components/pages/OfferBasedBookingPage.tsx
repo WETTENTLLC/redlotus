@@ -122,24 +122,12 @@ const OfferBasedBookingPage: React.FC = () => {
     setShowPayment(false);
   };
 
-  return (    <div className="min-h-screen bg-grey-light text-black">
-      {/* Hero Section */}
-      <div className="bg-white rounded-lg shadow-md mx-4 md:mx-8 mt-6 md:mt-8 border-b-4 border-red-500 overflow-hidden">
-        <div className="p-6 md:p-12 text-center">
-          <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
-            <img src={lotusLogo} alt="Red Lotus Logo" className="w-12 h-9 md:w-20 md:h-16" />
-            <h1 className="text-2xl md:text-5xl lg:text-6xl font-bold text-black">
-              BOOK RED LOTUS
-            </h1>
-            <img src={lotusLogo} alt="Red Lotus Logo" className="w-12 h-9 md:w-20 md:h-16" />
-          </div>
-          <p className="text-sm md:text-lg text-grey-600 max-w-3xl mx-auto px-4 leading-relaxed">
-            Make an offer for performances, collaborations, shoots, and special engagements
-          </p>
-        </div>
-      </div>
+  return (
+    <section className="section">
+      <h1 className="section-title">Book Red Lotus</h1>
+      <p className="section-subtitle">Make an offer for performances, collaborations, shoots, and special engagements</p>
 
-      <div className="container mx-auto px-4 py-6 md:py-12">
+      <div className="mt-2xl">
         {/* Services Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <div className="bg-white rounded-lg p-4 md:p-6 border-l-4 border-red-500 shadow-md hover:shadow-lg transition-shadow">
@@ -509,7 +497,7 @@ const OfferBasedBookingPage: React.FC = () => {
         </div>
       )}
     </div>
-    </div>
+    </section>
   );
 };
 

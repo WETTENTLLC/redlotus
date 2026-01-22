@@ -158,46 +158,31 @@ const FanArtPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-grey-light text-grey-dark">
-      {/* Hero Section */}
-      <div className="relative bg-white rounded-lg shadow-sm p-8 md:p-12 mb-8 border-b-4 border-red-500">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 md:gap-4 mb-3 md:mb-4">
-            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-20 md:h-16" />
-            <h1 className="text-3xl md:text-5xl font-bold text-black">
-              FAN ART GALLERY
-            </h1>
-            <img src={lotusLogo} alt="Red Lotus Logo" className="w-16 h-12 md:w-20 md:h-16" />
-          </div>
-          <p className="text-base md:text-lg text-grey-600 max-w-2xl mx-auto px-4 leading-relaxed">
-            Amazing artwork created by the Red Lotus community. 
-            Share your creativity and celebrate the music!
-          </p>
-        </div>
-      </div>
+    <section className="section">
+      <h1 className="section-title">Fan Art Gallery</h1>
+      <p className="section-subtitle">Amazing artwork created by the Red Lotus community</p>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-6 md:py-12">
-        {/* Upload Success Message */}
-        {uploadSuccess && (
-          <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-6 text-center">
-            <p className="text-green-800 font-bold">🎉 Your artwork has been submitted for review!</p>
-            <p className="text-green-700 mt-2">We'll review it and add it to the gallery if approved. Thank you for sharing your creativity!</p>
-          </div>
-        )}
-        {/* Submission Call-to-Action */}
-        <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-8 md:mb-12 border-l-4 border-red-500">
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-black">
-              Submit Your Fan Art!
-            </h2>
-            <p className="text-base md:text-lg mb-4 md:mb-6 text-grey-600">
-              Created something inspired by Red Lotus? Submit your art directly for review and potential gallery feature!
-            </p>
-            <button
-              onClick={() => setShowUploadForm(true)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 md:px-8 rounded-lg transition-colors touch-manipulation"
-            >
+      {/* Upload Success Message */}
+      {uploadSuccess && (
+        <div className="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-6 text-center">
+          <p className="text-green-800 font-bold">🎉 Your artwork has been submitted for review!</p>
+          <p className="text-green-700 mt-2">We'll review it and add it to the gallery if approved. Thank you for sharing your creativity!</p>
+        </div>
+      )}
+
+      {/* Submission Call-to-Action */}
+      <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 mb-8 md:mb-12 border-l-4 border-red-500">
+        <div className="text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-black">
+            Submit Your Fan Art!
+          </h2>
+          <p className="text-base md:text-lg mb-4 md:mb-6 text-grey-600">
+            Created something inspired by Red Lotus? Submit your art directly for review and potential gallery feature!
+          </p>
+          <button
+            onClick={() => setShowUploadForm(true)}
+            className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 md:px-8 rounded-lg transition-colors touch-manipulation"
+          >
               🎨 Submit Your Art
             </button>
           </div>
@@ -397,7 +382,6 @@ const FanArtPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
 
       {/* Image Modal */}
       {selectedImage && (
@@ -421,7 +405,7 @@ const FanArtPage: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 
