@@ -131,22 +131,18 @@ const OfferBasedBookingPage: React.FC = () => {
         {/* Services Overview */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 md:mb-12">
           <div className="bg-white rounded-lg p-4 md:p-6 border-l-4 border-red-500 shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎤</div>
             <h3 className="text-base md:text-lg font-semibold text-red-500 mb-2">Live Performances</h3>
             <p className="text-grey-600 text-xs md:text-sm">Concerts, festivals, private events</p>
           </div>
           <div className="bg-white rounded-lg p-4 md:p-6 border-l-4 border-amber-500 shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-2xl md:text-3xl mb-2 md:mb-3">🎵</div>
             <h3 className="text-base md:text-lg font-semibold text-amber-600 mb-2">Collaborations</h3>
             <p className="text-grey-600 text-xs md:text-sm">Features, songwriting, production</p>
           </div>
           <div className="bg-white rounded-lg p-4 md:p-6 border-l-4 border-blue-500 shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-2xl md:text-3xl mb-2 md:mb-3">📸</div>
             <h3 className="text-base md:text-lg font-semibold text-blue-600 mb-2">Photo/Video</h3>
             <p className="text-grey-600 text-xs md:text-sm">Professional shoots, music videos</p>
           </div>
           <div className="bg-white rounded-lg p-4 md:p-6 border-l-4 border-purple-500 shadow-md hover:shadow-lg transition-shadow">
-            <div className="text-2xl md:text-3xl mb-2 md:mb-3">✨</div>
             <h3 className="text-base md:text-lg font-semibold text-purple-600 mb-2">Special Events</h3>
             <p className="text-grey-600 text-xs md:text-sm">Corporate, private, custom experiences</p>
           </div>
@@ -371,7 +367,7 @@ const OfferBasedBookingPage: React.FC = () => {
                   This ensures serious inquiries and covers our time reviewing your proposal.
                 </p>
                 <p className="text-blue-700 text-xs md:text-sm font-medium">
-                  💫 Fee is credited toward your final booking if we accept your offer!
+                  Fee is credited toward your final booking if we accept your offer!
                 </p>
               </div>
 

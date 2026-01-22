@@ -133,61 +133,61 @@ const AdminDashboard: React.FC = () => {
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'enhanced-content' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('enhanced-content')}
             >
-              🎯 Content Hub
+              Content Hub
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'store' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('store')}
             >
-              🛍️ Store Manager
+              Store Manager
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'content' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('content')}
             >
-              📝 Legacy Content
+              Legacy Content
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'media' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('media')}
             >
-              📁 Media Upload
+              Media Upload
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'bookings' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('bookings')}
             >
-              📅 Bookings
+              Bookings
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'fanart' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('fanart')}
             >
-              🎨 Fan Art ({pendingFanArt.length})
+              Fan Art ({pendingFanArt.length})
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'messages' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('messages')}
             >
-              💬 Messages
+              Messages
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'quotes' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('quotes')}
             >
-              ✨ Vibe Quotes
+              Vibe Quotes
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'community-posts' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('community-posts')}
             >
-              👥 Community Posts
+              Community Posts
             </button>
             <button 
               className={`py-4 px-6 text-center flex-grow ${activeTab === 'analytics' ? 'bg-red-lotus text-white' : 'hover:bg-gray-50'}`}
               onClick={() => setActiveTab('analytics')}
             >
-              📊 Analytics
+              Analytics
             </button>
           </div>
           
@@ -202,7 +202,7 @@ const AdminDashboard: React.FC = () => {
             
             {activeTab === 'community-posts' && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-red-lotus">👥 Community Posts Approval</h3>
+                <h3 className="text-2xl font-bold text-red-lotus">Community Posts Approval</h3>
                 {(() => {
                   const pendingPosts = LocalStorageService.getAllPosts().filter(post => 
                     post.type === 'community' && !post.isActive
@@ -215,7 +215,7 @@ const AdminDashboard: React.FC = () => {
                     <div className="space-y-6">
                       {/* Pending Posts */}
                       <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                        <h4 className="text-lg font-bold text-yellow-800 mb-4">⏳ Pending Approval ({pendingPosts.length})</h4>
+                        <h4 className="text-lg font-bold text-yellow-800 mb-4">Pending Approval ({pendingPosts.length})</h4>
                         {pendingPosts.length === 0 ? (
                           <p className="text-yellow-600">No posts pending approval.</p>
                         ) : (
@@ -232,7 +232,7 @@ const AdminDashboard: React.FC = () => {
                                       }}
                                       className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
                                     >
-                                      ✅ Approve
+                                      Approve
                                     </button>
                                     <button
                                       onClick={() => {
@@ -243,7 +243,7 @@ const AdminDashboard: React.FC = () => {
                                       }}
                                       className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
                                     >
-                                      ❌ Reject
+                                      Reject
                                     </button>
                                   </div>
                                 </div>
@@ -259,7 +259,7 @@ const AdminDashboard: React.FC = () => {
                       
                       {/* Approved Posts */}
                       <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                        <h4 className="text-lg font-bold text-green-800 mb-4">✅ Approved Posts ({approvedPosts.length})</h4>
+                        <h4 className="text-lg font-bold text-green-800 mb-4">Approved Posts ({approvedPosts.length})</h4>
                         {approvedPosts.length === 0 ? (
                           <p className="text-green-600">No approved community posts yet.</p>
                         ) : (
@@ -294,20 +294,20 @@ const AdminDashboard: React.FC = () => {
             
             {activeTab === 'analytics' && (
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-red-lotus">📊 Site Analytics & Insights</h3>
+                <h3 className="text-2xl font-bold text-red-lotus">Site Analytics & Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-gradient-to-r from-red-lotus to-red-600 p-6 rounded-lg text-white">
-                    <h4 className="text-lg font-bold mb-2">❄️ Red Lotus Tribe</h4>
+                    <h4 className="text-lg font-bold mb-2">Red Lotus Tribe</h4>
                     <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'red').length}</div>
                     <div className="text-red-100">Members</div>
                   </div>
                   <div className="bg-gradient-to-r from-yellow-lotus to-yellow-600 p-6 rounded-lg text-white">
-                    <h4 className="text-lg font-bold mb-2">☀️ Yellow Lotus Tribe</h4>
+                    <h4 className="text-lg font-bold mb-2">Yellow Lotus Tribe</h4>
                     <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'yellow').length}</div>
                     <div className="text-yellow-100">Members</div>
                   </div>
                   <div className="bg-gradient-to-r from-blue-lotus to-blue-600 p-6 rounded-lg text-white">
-                    <h4 className="text-lg font-bold mb-2">🌸 Blue Lotus Tribe</h4>
+                    <h4 className="text-lg font-bold mb-2">Blue Lotus Tribe</h4>
                     <div className="text-3xl font-bold mb-1">{JSON.parse(localStorage.getItem('tribemembers') || '[]').filter((m: any) => m.tribe === 'blue').length}</div>
                     <div className="text-blue-100">Members</div>
                   </div>
@@ -327,7 +327,7 @@ const AdminDashboard: React.FC = () => {
                             member.tribe === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-blue-100 text-blue-800'
                           }`}>
-                            {member.tribe === 'red' ? '❄️ Red' : member.tribe === 'yellow' ? '☀️ Yellow' : '🌸 Blue'} Lotus
+                            {member.tribe === 'red' ? 'Red' : member.tribe === 'yellow' ? 'Yellow' : 'Blue'} Lotus
                           </span>
                           <span className="text-sm text-gray-500">
                             {new Date(member.joinedAt).toLocaleDateString()}

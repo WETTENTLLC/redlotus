@@ -13,10 +13,10 @@ const TribeExperience: React.FC<TribeExperienceProps> = ({ tribe, isActive }) =>
       energy: 'Focus & Determination',
       motto: 'Embrace the cold, ignite your fire within',
       benefits: [
-        '🔥 Exclusive winter-themed content',
-        '❄️ Focus and motivation sessions',
-        '🎵 Early access to rap & hip-hop tracks',
-        '💪 Strength-building community challenges'
+        'Exclusive winter-themed content',
+        'Focus and motivation sessions',
+        'Early access to rap & hip-hop tracks',
+        'Strength-building community challenges'
       ],
       bgGradient: 'from-red-900 via-red-600 to-red-400',
       textColor: 'text-red-100',
@@ -28,10 +28,10 @@ const TribeExperience: React.FC<TribeExperienceProps> = ({ tribe, isActive }) =>
       energy: 'Joy & Positivity',
       motto: 'Shine bright like the summer sun',
       benefits: [
-        '☀️ Uplifting summer vibes content',
-        '🌻 Daily positivity boosts',
-        '🎵 First listen to pop & dance tracks',
-        '🎉 Fun community events & challenges'
+        'Uplifting summer vibes content',
+        'Daily positivity boosts',
+        'First listen to pop & dance tracks',
+        'Fun community events & challenges'
       ],
       bgGradient: 'from-yellow-900 via-yellow-500 to-yellow-300',
       textColor: 'text-yellow-100',
@@ -43,10 +43,10 @@ const TribeExperience: React.FC<TribeExperienceProps> = ({ tribe, isActive }) =>
       energy: 'Renewal & Peace',
       motto: 'Flow like water, bloom like spring',
       benefits: [
-        '🌸 Spring renewal and growth content',
-        '🧘 Meditation and mindfulness sessions',
-        '🎵 Exclusive R&B & soul previews',
-        '🌱 Personal growth community support'
+        'Spring renewal and growth content',
+        'Meditation and mindfulness sessions',
+        'Exclusive R&B & soul previews',
+        'Personal growth community support'
       ],
       bgGradient: 'from-blue-900 via-blue-600 to-blue-400',
       textColor: 'text-blue-100',
@@ -111,9 +111,7 @@ const TribeExperience: React.FC<TribeExperienceProps> = ({ tribe, isActive }) =>
 
         <div className="mt-8 text-center">
           <div className={`inline-flex items-center gap-2 px-6 py-3 bg-white/10 rounded-full ${currentTribe.textColor}`}>
-            <span className="animate-pulse">🎵</span>
             <span>Your personalized {tribe} lotus experience is now active</span>
-            <span className="animate-pulse">🎵</span>
           </div>
         </div>
       </div>
