@@ -223,7 +223,7 @@ const StoreFront: React.FC = () => {
         <h3 className="text-lg md:text-2xl font-bold mb-4 text-white">Follow Us</h3>
         <div className="flex justify-center gap-3 md:gap-6 flex-wrap">
           <a 
-            href="https://tiktok.com/@redlotusofficial" 
+            href="https://www.tiktok.com/@red_lotus_music" 
             target="_blank" 
             rel="noopener noreferrer"
             className="bg-red-lotus text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-opacity-80 transition text-sm md:text-base touch-manipulation"
@@ -231,7 +231,7 @@ const StoreFront: React.FC = () => {
             TikTok
           </a>
           <a 
-            href="https://instagram.com/redlotusofficial" 
+            href="https://www.instagram.com/red.lotus.music/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="bg-red-lotus text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-opacity-80 transition text-sm md:text-base touch-manipulation"
@@ -239,15 +239,7 @@ const StoreFront: React.FC = () => {
             Instagram
           </a>
           <a 
-            href="https://twitter.com/redlotusofficial" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-red-lotus text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-opacity-80 transition text-sm md:text-base touch-manipulation"
-          >
-            Twitter
-          </a>
-          <a 
-            href="https://youtube.com/@redlotusofficial" 
+            href="https://www.youtube.com/@Red-Lotus-Music" 
             target="_blank" 
             rel="noopener noreferrer"
             className="bg-red-lotus text-white px-4 py-2 md:px-6 md:py-3 rounded-full hover:bg-opacity-80 transition text-sm md:text-base touch-manipulation"

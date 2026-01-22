@@ -50,10 +50,9 @@ const SEOService: React.FC<SEOProps> = ({  title = "Red Lotus Music | Official H
     "logo": "https://redlotusofficial.com/favicon.ico",
     "sameAs": [
       "https://distrokid.com/hyperfollow/redlotus/lotus-the-red-album/",
-      "https://instagram.com/redlotusmusic",
-      "https://twitter.com/redlotusmusic",
-      "https://facebook.com/redlotusmusic",
-      "https://youtube.com/@redlotusmusic"
+      "https://www.instagram.com/red.lotus.music/",
+      "https://www.tiktok.com/@red_lotus_music",
+      "https://www.youtube.com/@Red-Lotus-Music"
     ],
     "genre": ["Hip Hop", "R&B", "Pop", "Rap", "Urban"],
     "foundingDate": "2024",

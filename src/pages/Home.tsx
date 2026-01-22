@@ -148,7 +148,7 @@ const Home: React.FC = () => {
 
               {/* YouTube */}
               <a 
-                href="https://www.youtube.com/@redlotusmusic" 
+                href="https://www.youtube.com/@Red-Lotus-Music" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="flex items-center bg-white text-red-lotus px-6 py-3 rounded-full font-bold hover:bg-gray-100 transition"

@@ -37,10 +37,9 @@ export class AEOService {
         'serviceType': ['Artist Website Design', 'Music Portfolio Development', 'Band Website Creation', 'Musician Web Services']
       },
       'sameAs': [
-        'https://twitter.com/redlotusmusic',
-        'https://instagram.com/redlotusmusic',
-        'https://tiktok.com/@redlotusmusic',
-        'https://soundcloud.com/redlotusmusic'
+        'https://www.instagram.com/red.lotus.music/',
+        'https://www.tiktok.com/@red_lotus_music',
+        'https://www.youtube.com/@Red-Lotus-Music'
       ],
       'image': 'https://redlotus.netlify.app/assets/lotus-each-album.png',
       'logo': {

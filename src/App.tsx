@@ -149,10 +149,9 @@ function App() {
             'description': 'Red Lotus is a revolutionary music collective featuring three distinct tribes: Red (Winter/Rap energy), Yellow (Summer/Pop energy), and Blue (Spring/R&B renewal).',
             'foundingDate': '2024',
             'sameAs': [
-              'https://twitter.com/redlotusmusic',
-              'https://instagram.com/redlotusmusic',
-              'https://tiktok.com/@redlotusmusic',
-              'https://soundcloud.com/redlotusmusic'
+              'https://www.instagram.com/red.lotus.music/',
+              'https://www.tiktok.com/@red_lotus_music',
+              'https://www.youtube.com/@Red-Lotus-Music'
             ],
             'genre': ['Hip-Hop', 'Pop', 'R&B']
           })}

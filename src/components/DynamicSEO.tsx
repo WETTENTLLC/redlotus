@@ -53,11 +53,9 @@ const DynamicSEO: React.FC<DynamicSEOProps> = ({
       'logo': `${baseUrl}/logo.png`,
       'description': 'Independent music collective featuring innovative artists across hip-hop, R&B, and pop genres.',
       'sameAs': [
-        'https://www.instagram.com/redlotusmusic',
-        'https://twitter.com/redlotusmusic',
-        'https://www.youtube.com/redlotusmusic',
-        'https://open.spotify.com/artist/redlotusmusic',
-        'https://music.apple.com/artist/redlotusmusic'
+        'https://www.instagram.com/red.lotus.music/',
+        'https://www.tiktok.com/@red_lotus_music',
+        'https://www.youtube.com/@Red-Lotus-Music'
       ]
     };
 

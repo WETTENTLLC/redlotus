@@ -165,7 +165,7 @@ const ContactPage: React.FC = () => {
                       @red.lotus.music on TikTok
                     </a>
                     <a 
-                      href="https://www.youtube.com/@redlotusmusic" 
+                      href="https://www.youtube.com/@Red-Lotus-Music" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="flex items-center text-gray-700 hover:text-red-lotus transition"
