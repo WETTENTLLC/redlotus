@@ -1,53 +1,158 @@
+# Red Lotus - Advanced AEO Robots Configuration
+# Optimized for Answer Engine Optimization (ChatGPT, Perplexity, Gemini)
+# Last updated: 2024
+
+# === DEFAULT RULES (Most crawlers) ===
 User-agent: *
 Allow: /
-
-# Priority pages for Red Lotus Music
-Allow: /albums
-Allow: /live
-Allow: /tribe
-Allow: /about
-
-# Admin pages - restrict crawling
+Allow: /assets/
+Allow: /index.html
+Disallow: /_next/
+Disallow: /.git/
+Disallow: /node_modules/
+Disallow: /env.local
 Disallow: /admin
 Disallow: /login
 Disallow: /setup
 Disallow: /diagnostics
 
-# API endpoints
-Disallow: /api/
+# === AI & ANSWER ENGINE CRAWLERS (PRIORITY) ===
+# These crawlers are essential for AEO success
 
-# Static assets
+# ChatGPT Bot / OpenAI
+User-agent: GPTBot
+Allow: /
 Allow: /assets/
-Allow: /images/
-Allow: /og-image.png
-Allow: /*.css
-Allow: /*.js
+Allow: /index.html
+Allow: /#/
+Crawl-delay: 0.5
 
-# Sitemap location
-Sitemap: https://redlotusofficial.com/sitemap.xml
+# Perplexity Bot
+User-agent: Perplexity-bot
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
+Crawl-delay: 0.5
 
-# Crawl delay to be respectful
-Crawl-delay: 1
+# Google Bard / Gemini
+User-agent: Google-Extended
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
 
-# Specific instructions for major search engines
+# Microsoft Copilot / Bing AI
+User-agent: MicrosoftBot
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
+
+# Anthropic Claude
+User-agent: Claude-Web
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
+
+# Apple Intelligent Search
+User-agent: AppleBot
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
+
+# Meta Threads Bot
+User-agent: Threads-Bot
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /#/
+
+# === TRADITIONAL SEARCH ENGINES ===
+
+# Google
 User-agent: Googlebot
 Allow: /
+Allow: /assets/
+Allow: /#/
 Crawl-delay: 1
 
+# Bing
 User-agent: Bingbot
 Allow: /
+Allow: /assets/
+Allow: /#/
 Crawl-delay: 1
 
+# Yahoo/Slurp
 User-agent: Slurp
 Allow: /
+Allow: /assets/
+Allow: /#/
 Crawl-delay: 2
 
-# Social media crawlers
-User-agent: facebookexternalhit/
+# DuckDuckGo
+User-agent: DuckDuckBot
 Allow: /
+Allow: /assets/
+Allow: /#/
 
+# Yandex
+User-agent: YandexBot
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# Baidu
+User-agent: BaiduSpider
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# === SOCIAL MEDIA CRAWLERS ===
+
+# Facebook
+User-agent: facebookexternalhit
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# Twitter / X
 User-agent: Twitterbot
 Allow: /
+Allow: /assets/
+Allow: /#/
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# Instagram
+User-agent: Instagram
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# TikTok
+User-agent: TikTokBot
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# Pinterest
+User-agent: PinterestBot
+Allow: /
+Allow: /assets/
+Allow: /#/
+
+# === SITEMAP LOCATIONS ===
+Sitemap: https://redlotus.netlify.app/sitemap.xml
+Sitemap: https://redlotus.netlify.app/sitemap-music.xml
+Sitemap: https://redlotus.netlify.app/sitemap-events.xml
 
 User-agent: LinkedInBot
 Allow: /

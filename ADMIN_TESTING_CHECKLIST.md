@@ -1,139 +1,97 @@
-# Red Lotus Admin Dashboard - Testing Checklist
+# Comprehensive Admin System Testing Checklist
 
-## 🚀 Quick Start
-1. **Development Server**: `npm run dev` → http://localhost:5175/
-2. **Admin Access**: Click "Admin Dashboard" in navigation → `/admin`
-3. **Login**: Use your Firebase admin credentials
+This document provides a comprehensive checklist for testing the Red Lotus admin dashboard.
 
-## 📋 Comprehensive Testing Guide
+## I. Authentication
 
-### 🏪 **Store Manager Tab** - E-commerce Management
-- [ ] **Add New Product**
-  - [ ] Music: Upload audio file, set price, add description
-  - [ ] Merch: Upload image, set price, add description
-  - [ ] Digital: Upload download file, set price
-  - [ ] Tickets: Set event details, price, quantity
-- [ ] **Edit Existing Product**
-  - [ ] Update price, description, image
-  - [ ] Toggle in-stock status
-  - [ ] Toggle featured status
-- [ ] **Delete Product** - Remove items from store
-- [ ] **Verify Store Display** - Check items appear in main store section
+-   [ ] **Access Control:** Visiting `/admin` without being logged in should redirect to `/login`.
+-   [ ] **Valid Login:** A user with correct admin credentials can successfully log in and is redirected to `/admin`.
+-   [ ] **Invalid Login:** A user with incorrect credentials sees a "Failed to sign in" error message and remains on the login page.
+-   [ ] **Logout:** Clicking the "Sign Out" button in the admin dashboard logs the user out and terminates their session.
 
-### 🎨 **Content Manager Tab** - Media & Content
-- [ ] **Upload Images**
-  - [ ] Gallery images → appear in photo gallery
-  - [ ] Behind-the-scenes → appear in BTS section
-  - [ ] General content images
-- [ ] **Manage Quotes**
-  - [ ] Add inspirational quotes
-  - [ ] Edit existing quotes
-  - [ ] Delete quotes
-- [ ] **Content Assignment** - Verify content appears in correct sections
+## II. Content Hub (`EnhancedContentManager`)
 
-### 📁 **Media Upload Tab** - Raw File Management
-- [ ] **Image Upload** - Direct image uploads to Firebase Storage
-- [ ] **Music Upload** - Audio files with metadata (title, artist, price)
-- [ ] **Verify Upload List** - Check uploaded songs appear in list
+This section uses **LocalStorage**, so tests should verify the `redlotus_posts` key in your browser's LocalStorage.
 
-### 📅 **Bookings Tab** - Offer Based Booking Management
-- [ ] **View Booking Requests** - See submitted booking forms
-- [ ] **Approve Bookings** - Accept booking requests
-- [ ] **Reject Bookings** - Decline with reason
-- [ ] **Add Notes** - Internal notes for booking management
-- [ ] **Payment Status** - Verify PayPal payment confirmations
+### Creating Content
+-   [ ] **Create Text Post:** Create a new "Announcement" or "Quote" post. Verify it is added correctly to LocalStorage and appears in the post list.
+-   [ ] **Create Image Post:** Create a new "Image Post".
+    -   [ ] Verify a file is uploaded to the `content-posts/image/` folder in Firebase Storage.
+    -   [ ] Verify the post is added to LocalStorage with the `content` field containing the image's Firebase Storage URL.
+-   [ ] **Create Video/Music Post:** Create a "Video" or "Music" post.
+    -   [ ] Verify a file is uploaded to the correct folder in Firebase Storage.
+    -   [ ] Verify the post is added to LocalStorage with the URL.
 
-### 🎭 **Fan Art Tab** - Community Art Management
-- [ ] **View Submissions** - See pending fan art uploads
-- [ ] **Approve Art** - Accept fan art for gallery display
-- [ ] **Reject Art** - Decline submissions
-- [ ] **Verify Gallery** - Check approved art appears in fan art page
+### Reading and Filtering Content
+-   [ ] **View All Posts:** Verify all posts from LocalStorage are displayed when filters are set to "all".
+-   [ ] **Filter by Section:** Select a specific section from the "Filter by Section" dropdown. Verify that only posts matching that section are displayed.
+-   [ ] **Filter by Tribe:** Select a specific tribe from the "Filter by Tribe" dropdown. Verify that only posts matching that tribe (or "All Tribes") are displayed.
 
-### 💬 **Messages Tab** - Communication Management
-- [ ] **View Messages** - See contact form submissions
-- [ ] **Respond to Messages** - Admin communication tools
-- [ ] **Mark as Read/Unread** - Message status management
+### Updating and Managing Content
+-   [ ] **Edit Post:** Click "Edit" on a post. Change its title and content, then save. Verify the changes are reflected in LocalStorage and in the UI.
+-   [ ] **Toggle Visibility (Show/Hide):** Click "Hide" on an active post. Verify its `isActive` flag is set to `false` in LocalStorage and the UI updates. Click "Show" on a hidden post and verify the opposite.
+-   [ ] **Toggle Pin:** Click the pin icon on a post. Verify its `isPinned` flag is toggled in LocalStorage and the UI updates.
+-   [ ] **Delete Post:** Click "Delete" on a post. Verify it is removed from LocalStorage and the UI.
 
-### ✨ **Vibe Quotes Tab** - Inspirational Content
-- [ ] **Add Quotes** - New inspirational quotes
-- [ ] **Edit Quotes** - Update existing content
-- [ ] **Delete Quotes** - Remove outdated content
-- [ ] **Quote Display** - Verify quotes appear on main site
+## III. Store Manager (`StoreManager`)
 
-## 🛒 **User-Facing Store Testing**
+This section uses the **`store` collection in Firestore**.
 
-### 💳 **Purchase Flow Testing**
-- [ ] **Browse Products** - Navigate store categories (music, merch, digital, tickets)
-- [ ] **Add to Cart** - Select items for purchase
-- [ ] **PayPal Payment** - Complete test purchase with sandbox account
-- [ ] **Payment Success** - Verify confirmation message
-- [ ] **Download Links** - Check digital content access (if applicable)
+### Creating Store Items
+-   [ ] **Create Merch Item:** Create a new "Merchandise" item with an image.
+    -   [ ] Verify a new document is created in the `store` collection in Firestore.
+    -   [ ] Verify the image is uploaded to the `store/images/` folder in Firebase Storage and the URL is saved in the document.
+-   [ ] **Create Music Item:** Create a new "Music" item with an image and an audio file.
+    -   [ ] Verify a new document is created in the `store` collection.
+    -   [ ] Verify the image and audio file are uploaded to the correct folders in Firebase Storage and their URLs are saved.
 
-### 🎨 **Fan Art Submission**
-- [ ] **Upload Fan Art** - Submit new artwork
-- [ ] **Form Completion** - Fill artist details, description
-- [ ] **Submission Success** - Verify upload confirmation
-- [ ] **Admin Notification** - Check submission appears in admin
+### Managing Store Items
+-   [ ] **Edit Item:** Edit an existing item's price and description. Verify the document in Firestore is updated.
+-   [ ] **Toggle Featured:** Click "Feature" on an item. Verify the `featured` field in its Firestore document is set to `true`. Click "Unfeature" and verify it's set to `false`.
+-   [ ] **Delete Item:** Delete an item. Verify its document is removed from the `store` collection in Firestore.
 
-### 📝 **Booking Submission**
-- [ ] **Fill Booking Form** - Complete offer details
-- [ ] **PayPal Payment** - Pay $25 consultation fee
-- [ ] **Booking Confirmation** - Verify submission success
-- [ ] **Admin Notification** - Check booking appears in admin
+## IV. Media Upload (Legacy)
 
-## 🔧 **Technical Verification**
+This section primarily adds items to the **`store` collection in Firestore**.
 
-### 🏗️ **Build & Deploy**
-- [ ] **Production Build** - `npm run build` completes successfully
-- [ ] **No TypeScript Errors** - Clean build output
-- [ ] **Asset Optimization** - Images, fonts load correctly
-- [ ] **PWA Features** - Service worker, manifest working
+-   [ ] **Upload Image:** Use the "Upload Images" form.
+    -   [ ] Verify the image is uploaded to the `images` folder in Firebase Storage.
+    -   *Note: This uploader might not create a Firestore document. Verify behavior.*
+-   [ ] **Upload Music:** Use the "Upload Music" form.
+    -   [ ] Verify the audio file is uploaded to the `music` folder in Firebase Storage.
+    -   [ ] Verify a new document is created in the `store` collection with the URL and metadata.
+    -   [ ] Verify the "Uploaded Songs" list in the UI updates.
 
-### 🔥 **Firebase Integration**
-- [ ] **Authentication** - Admin login/logout working
-- [ ] **Firestore** - Data saving/loading correctly
-- [ ] **Storage** - File uploads to Firebase Storage
-- [ ] **Real-time Updates** - Live data synchronization
+## V. Fan Art Management
 
-### 💰 **PayPal Integration**
-- [ ] **Sandbox Payments** - Test transactions working
-- [ ] **Error Handling** - Failed payment scenarios
-- [ ] **Success Callbacks** - Payment confirmation flow
-- [ ] **Transaction Logging** - Payment details captured
+-   [ ] **Setup:** Manually add a document to the `fanart` collection in Firestore with `approved: false` to simulate a fan submission.
+-   [ ] **View Pending Art:** Navigate to the "Fan Art" tab and verify the pending submission is displayed.
+-   [ ] **Approve Art:** Click "Approve".
+    -   [ ] Verify the `approved` field for the document in Firestore is set to `true`.
+    -   [ ] Verify the item disappears from the pending list.
+-   [ ] **Reject Art:** On a second test submission, click "Reject".
+    -   [ ] Verify the document is deleted from the `fanart` collection in Firestore.
+    -   [ ] Verify the item disappears from the pending list.
 
-## 🚨 **Known Issues to Test**
-- [ ] **Image Loading** - All images display correctly
-- [ ] **Mobile Responsiveness** - Admin dashboard works on mobile
-- [ ] **File Upload Limits** - Large file handling
-- [ ] **Concurrent Users** - Multiple admin sessions
+## VI. Booking Manager
 
-## 🎯 **Production Readiness**
-- [ ] **Environment Variables** - All secrets configured
-- [ ] **Security Rules** - Firebase security properly set
-- [ ] **Error Boundaries** - Graceful error handling
-- [ ] **Performance** - Fast loading times
-- [ ] **SEO** - Meta tags and descriptions
-- [ ] **Analytics** - Tracking code integration
+This section uses the **`bookings` collection in Firestore**.
 
-## 📞 **Support & Documentation**
-- [ ] **Admin User Guide** - Documentation for staff
-- [ ] **User Support** - Help for customers
-- [ ] **Backup Procedures** - Data backup strategy
-- [ ] **Monitoring** - Error tracking and alerts
+-   [ ] **Setup:** Manually add a new booking document to the `bookings` collection with `status: 'pending'`.
+-   [ ] **View Bookings:** Verify the new booking request appears in the list.
+-   [ ] **Update Status:** Select a booking.
+    -   [ ] Change its status to "Approved". Verify the `status` field is updated in Firestore.
+    -   [ ] Change its status to "Negotiating". Verify the `status` is updated.
+-   [ ] **Add Notes:** Add a note to a booking and update its status. Verify the `adminNotes` field is saved in Firestore.
+-   [ ] **Delete Booking:** Delete a booking. Verify the document is removed from the `bookings` collection.
 
----
+## VII. Other Managers
 
-## 🔗 **Quick Links**
-- **Live Site**: https://redlotusofficial.com
-- **Admin Dashboard**: http://localhost:5175/admin
-- **Firebase Console**: https://console.firebase.google.com/project/red-lotus-cf4b4
-- **PayPal Developer**: https://developer.paypal.com/
-
-## 🏆 **Success Criteria**
-✅ All admin features work without errors  
-✅ Store purchases complete successfully  
-✅ Content uploads to correct sections  
-✅ Mobile/desktop responsive  
-✅ Production build deploys cleanly  
-
-**Status**: Ready for production deployment! 🚀
+-   [ ] **Community Posts:**
+    -   [ ] Test the approve/reject functionality for community posts, noting that it uses LocalStorage.
+-   [ ] **Analytics:**
+    -   [ ] Verify the tribe member counts are displayed, noting this also uses LocalStorage.
+-   [ ] **Legacy Content Manager:**
+    -   [ ] Perform basic Create, Read, Update, and Delete tests on the "Legacy Content" tab, noting that it uses the `content` collection in Firestore.
+-   [ ] **Messages & Vibe Quotes:**
+    -   [ ] Explore the functionality of these tabs and verify they work as expected. (I have not investigated the code for these managers).
