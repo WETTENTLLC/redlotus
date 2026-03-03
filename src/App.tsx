@@ -22,6 +22,9 @@ import MinimalAppWrapper from './components/MinimalAppWrapper';
 import ProductCard from './components/ProductCard';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 import AEOHead from './components/AEOHead';
+import AdUnit from './components/AdUnit';
+import PrivacyPolicyPage from './components/pages/PrivacyPolicyPage';
+import AboutContactPage from './components/pages/AboutContactPage';
 
 // Import images
 import redLotusAlbumRap from './assets/red-lotus-album-rap.jpeg';
@@ -35,7 +38,7 @@ import behindTheScenes2 from './assets/behind-the-scenes-image2.JPEG';
 import behindTheScenes3 from './assets/behind-the-scenes-image3.JPEG';
 
 // Navigation sections
-type SectionName = 'hut' | 'music' | 'vibrate' | 'tribe' | 'bts' | 'store' | 'live' | 'fanart' | 'booking' | 'community' | 'admin';
+type SectionName = 'hut' | 'music' | 'vibrate' | 'tribe' | 'bts' | 'store' | 'live' | 'fanart' | 'booking' | 'community' | 'admin' | 'privacy' | 'about';
 
 // Tribe/Theme color definitions
 const tribeColors = {
@@ -245,6 +248,7 @@ function App() {
                           );
                         })}
                       </div>
+                      <AdUnit adSlot="1234567890" />
                     </section>
                   </>
                 )}
@@ -274,6 +278,7 @@ function App() {
                         </div>
                       ))}
                     </div>
+                    <AdUnit adSlot="2345678901" />
                   </section>
                 )}
 
@@ -358,6 +363,7 @@ function App() {
                       <div className="mt-2xl">
                         <StoreFront />
                       </div>
+                      <AdUnit adSlot="3456789012" />
                     </section>
                   </>
                 )}
@@ -443,6 +449,37 @@ function App() {
                         </button>
                       </div>
                     )}
+                    </section>
+                  </>
+                )}
+
+                {/* About & Contact */}
+                {activeSection === 'about' && (
+                  <>
+                    <AEOHead
+                      title="About Red Lotus"
+                      description="Learn about Red Lotus music collective. Discover our mission, meet our three tribes - Red (Winter/Rap), Yellow (Summer/Pop), and Blue (Spring/R&B). Get in touch with us."
+                      keywords="about us, contact, Red Lotus, music collective, tribes"
+                      type="website"
+                    />
+                    <section className="section">
+                      <AboutContactPage />
+                    </section>
+                    <AdUnit adSlot="4567890123" />
+                  </>
+                )}
+
+                {/* Privacy Policy */}
+                {activeSection === 'privacy' && (
+                  <>
+                    <AEOHead
+                      title="Privacy Policy"
+                      description="Red Lotus Privacy Policy. Learn how we collect, use, and protect your information."
+                      keywords="privacy policy, data protection, privacy"
+                      type="website"
+                    />
+                    <section className="section">
+                      <PrivacyPolicyPage />
                     </section>
                   </>
                 )}

@@ -19,6 +19,8 @@ const navigationItems = [
   { id: 'fanart', label: 'Fan Art' },
   { id: 'booking', label: 'Booking' },
   { id: 'community', label: 'Community' },
+  { id: 'about', label: 'About' },
+  { id: 'privacy', label: 'Privacy' },
 ];
 
 const MinimalAppWrapper: React.FC<MinimalAppWrapperProps> = ({
