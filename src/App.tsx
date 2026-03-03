@@ -30,9 +30,9 @@ import blueLotusAlbumRnb from './assets/blue-lotus-album-rnb.jpeg';
 import redLotusImage from './assets/red-lotus-image.png';
 import yellowLotusImage from './assets/yellow-lotus-image.png';
 import blueLotusImage from './assets/blue-lotus-image.png';
-import behindTheScenesMain from './assets/behind-the-scenes-main-image.jpeg';
-import behindTheScenes2 from './assets/behind-the-scenes-image2.jpeg';
-import behindTheScenes3 from './assets/behind-the-scenes-image3.jpeg';
+import behindTheScenesMain from './assets/behind-the-scenes-main-image.JPEG';
+import behindTheScenes2 from './assets/behind-the-scenes-image2.JPEG';
+import behindTheScenes3 from './assets/behind-the-scenes-image3.JPEG';
 
 // Navigation sections
 type SectionName = 'hut' | 'music' | 'vibrate' | 'tribe' | 'bts' | 'store' | 'live' | 'fanart' | 'booking' | 'community' | 'admin';
